@@ -50,13 +50,13 @@ namespace PriceQuationApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //跨域
-            // app.UseCors(builder =>
-            // {
-            //     builder.WithOrigins("http://localhost:3000", "http://localhost:5000")
-            //         .AllowAnyMethod()
-            //         .AllowAnyHeader()
-            //         .AllowCredentials();
-            // });
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:3000", "http://localhost:5000","http://localhost:8080")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
 
             if (env.IsDevelopment())
             {
