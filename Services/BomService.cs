@@ -16,37 +16,38 @@ namespace PriceQuationApi.Services
         Task<User> GetUser(int Id);
 
         Task<PlmMiddle> GetMiddleData(string assembylyPartNumber);
-        Task<int> GetQuoteItem(int quoteItemId);
+        Task<int> GetQuoteItem(string quoteItemId);
         Task<int> SetDepartmentId(string category);
+        Task<IEnumerable<Bom>> GetBomsAsync();
     }
 
-    public class BomService: IBomService
+    public class BomService : IBomService
     {
         private readonly PriceQuationContext _context;
 
-        public BomService (PriceQuationContext context)
+        public BomService(PriceQuationContext context)
         {
-            _context= context;
+            _context = context;
         }
 
-        public async Task<IEnumerable<Bom>> CreateBoms (List<Bom> Boms)
+        public async Task<IEnumerable<Bom>> CreateBoms(List<Bom> Boms)
         {
             try
             {
-                foreach(var bom in Boms)
+                foreach (var bom in Boms)
                 {
                     _context.Boms.Add(bom);
                 }
                 await _context.SaveChangesAsync();
                 return Boms;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
         }
-    
-        public async Task<User> GetUser (int Id)
+
+        public async Task<User> GetUser(int Id)
         {
             try
             {
@@ -58,7 +59,7 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-    
+
         public async Task<PlmMiddle> GetMiddleData(string assemblyPartNumber)
         {
             PlmMiddle plmMiddle = new PlmMiddle();
@@ -73,6 +74,11 @@ namespace PriceQuationApi.Services
                     string sql = string.Format("Select * from PLM_QPP where HC_Product='{0}'", assemblyPartNumber);
                     OracleCommand oracleCommand = new OracleCommand(sql, oracleConnection);
                     OracleDataReader reader = oracleCommand.ExecuteReader();
+                    if (!reader.HasRows)
+                    {
+                        //沒有資料
+                        plmMiddle = null;
+                    }
                     while (reader.Read())
                     {
                         plmMiddle.OPPO = reader.GetValue(reader.GetOrdinal("OPPO")).ToString();
@@ -97,15 +103,21 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-   
-        public async Task<int> GetQuoteItem(int quoteItemId)
+
+        public async Task<int> GetQuoteItem(string quoteItemId)
         {
             try
             {
-                var quoteItem = await _context.QuoteItems.Where(q => q.QuoteItemId == quoteItemId).FirstOrDefaultAsync();
-                if(quoteItem == null)
+                int Id = Convert.ToInt16(quoteItemId);
+                var quoteItem = await _context.QuoteItems.Where(q => q.QuoteItemId == Id).FirstOrDefaultAsync();
+                if (quoteItem == null)
                     throw new Exception(string.Format("quoteItemId = {0} 不存在，請聯絡PLM管理者！", quoteItemId));
                 return quoteItem.QuoteItemId;
+            }
+            catch (FormatException format_ex)
+            {
+                throw new Exception(string.Format(format_ex.Message + Environment.NewLine +
+                 "系統無法識別中間區欄位，報價單位名稱為「{0}」，請聯絡PLM工程師", quoteItemId));
             }
             catch (Exception ex)
             {
@@ -118,10 +130,23 @@ namespace PriceQuationApi.Services
             try
             {
                 var quoteItem = await _context.QuoteItems.Where(q => q.ResponsibleItem.Contains(category)).AsNoTracking().FirstOrDefaultAsync();
-                if(quoteItem == null)
-                    throw new Exception("系統無法識別 "+ category);
+                if (quoteItem == null)
+                    throw new Exception("系統無法識別 " + category);
 
-                 return quoteItem.DepartemntId;   
+                return quoteItem.DepartemntId;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    
+        public async Task<IEnumerable<Bom>> GetBomsAsync()
+        {
+            try
+            {
+                var Boms = await _context.Boms.ToListAsync();
+                return Boms;
             }
             catch (Exception ex)
             {

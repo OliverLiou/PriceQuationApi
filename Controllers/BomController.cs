@@ -75,10 +75,27 @@ namespace PriceQuationApi.Controllers
             }
             catch(Exception ex)
             {
-                throw ex;
+                ModelState.AddModelError("Error", ex.Message);
+                return BadRequest(ModelState);
             }
         }
 
+        [HttpGet("GetBoms")]
+        public async Task<ActionResult<IEnumerable<Bom>>> GetBoms()
+        {
+            try
+            {
+                var Boms = await _service.GetBomsAsync();
+                return Boms.ToList();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Error", ex.Message);
+                return BadRequest(ModelState);
+            }
+        }
+        
+        #region Function
         private async Task<Bom> SetBomData(ISheet sheet,IFormulaEvaluator evaluator)
         {
             string ErrMsg = string.Empty;
@@ -139,12 +156,10 @@ namespace PriceQuationApi.Controllers
                                                       plmMiddle.OPPO, Bom.AssemblyPartNumber));
                 for(int i =0 ;i<quoters.Length;i++)
                 {
-                    QuoteDetail quoteDetail = new QuoteDetail()
-                    {
-                        AssemblyPartNumber = Bom.AssemblyPartNumber,
-                        QuoteItemId = await _service.GetQuoteItem(Convert.ToInt16(quoters[i])),
-                        QuoteTime = Convert.ToDateTime(quote_Times[i])
-                    };
+                    QuoteDetail quoteDetail = new QuoteDetail();
+                    quoteDetail.AssemblyPartNumber = Bom.AssemblyPartNumber;
+                    quoteDetail.QuoteItemId = await _service.GetQuoteItem(quoters[i]);
+                    quoteDetail.QuoteTime = Convert.ToDateTime(quote_Times[i]);
                     quoteDetails.Add(quoteDetail);
                 }
                 
@@ -283,5 +298,6 @@ namespace PriceQuationApi.Controllers
             if(bomItem.Quantity <= 0M)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『數量』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
         }
+        #endregion
     }
 }
