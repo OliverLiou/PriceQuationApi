@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj": {}
+    "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj": {}
   },
   "projects": {
-    "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj": {
+    "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj",
+        "projectUniqueName": "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj",
         "projectName": "PriceQuationApi",
-        "projectPath": "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj",
-        "packagesPath": "C:\\Users\\b00003\\.nuget\\packages\\",
-        "outputPath": "C:\\PQP_Web\\PriceQuationApi\\obj\\",
+        "projectPath": "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj",
+        "packagesPath": "C:\\Users\\cpsga\\.nuget\\packages\\",
+        "outputPath": "D:\\PriceQutation\\PriceQuationApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\b00003\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\cpsga\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -116,7 +116,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }
