@@ -142,17 +142,7 @@ namespace PriceQuationApi.Controllers
 
                 //組成quoteDetails
                 //拿取中間區資料
-                //PlmMiddle plmMiddle = await _service.GetMiddleData(Bom.AssemblyPartNumber);
-                PlmMiddle plmMiddle = new PlmMiddle()
-                {
-                    OPPO = "OPPO-002140",
-                    HC_PRODUCT = "Test-53510-BZ100",
-                    QUOTER = "1,2,3,4,5",
-                    QUOTE_TIME = "2020-12-01,2020-12-01,2020-12-01,2020-12-01,2020-12-01",
-                    DESIGNER = "ABC",
-                    SALES_OWNER = "DEF",
-                    ME_OWNER = "GJK"
-                };
+                PlmMiddle plmMiddle = await _service.GetMiddleData(Bom.AssemblyPartNumber);
                 if(plmMiddle == null)
                     throw new Exception("PLM中間區找不到「總成件號」為：" + Bom.AssemblyPartNumber + "的資料！請確認，總成資料是否正確");
                 //放入QuoteDetail
