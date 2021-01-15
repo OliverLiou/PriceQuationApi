@@ -26,6 +26,9 @@ namespace PriceQuationApi.Model
             modelBuilder.Entity<BomItem>()
                 .HasKey(b => new {b.No});
 
+            modelBuilder.Entity<BomItem>()
+                .HasIndex( b => b.No).IsUnique();
+
             modelBuilder.Entity<QuoteDetail>()
                .HasKey(q => q.QuoteDetailId);
 
@@ -91,6 +94,8 @@ namespace PriceQuationApi.Model
                  new QuoteItem() { QuoteItemId = 10, ResponsibleItem = "打樣費", DepartemntId = 2},
                  new QuoteItem() { QuoteItemId = 11, ResponsibleItem = "試驗費", DepartemntId = 7}
              );
+
+     
         }
     }
 }

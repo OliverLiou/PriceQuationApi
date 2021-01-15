@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj": {}
+    "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj": {}
   },
   "projects": {
-    "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj": {
+    "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj",
+        "projectUniqueName": "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj",
         "projectName": "PriceQuationApi",
-        "projectPath": "D:\\PriceQutation\\PriceQuationApi\\PriceQuationApi.csproj",
-        "packagesPath": "C:\\Users\\cpsga\\.nuget\\packages\\",
-        "outputPath": "D:\\PriceQutation\\PriceQuationApi\\obj\\",
+        "projectPath": "C:\\PQP_Web\\PriceQuationApi\\PriceQuationApi.csproj",
+        "packagesPath": "C:\\Users\\b00003\\.nuget\\packages\\",
+        "outputPath": "C:\\PQP_Web\\PriceQuationApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\cpsga\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\b00003\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -58,6 +58,10 @@
               ]
             },
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Analyzers": {
               "target": "Package",
               "version": "[5.0.0, )"
             },
@@ -116,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
