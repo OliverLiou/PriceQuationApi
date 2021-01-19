@@ -5,7 +5,7 @@ namespace PriceQuationApi.Model
 {
     public class MeasuringItem
     {
-        [ForeignKey("BomItem")]
+        [Key, ForeignKey("BomItem")]
         public string BomItemId { get; set; }
 
         [Display(Name = "需要量檢具")]

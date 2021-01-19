@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PriceQuationApi.Model;
 
 namespace PriceQuationApi.Migrations
 {
     [DbContext(typeof(PriceQuationContext))]
-    partial class PriceQuationContextModelSnapshot : ModelSnapshot
+    [Migration("20210119084605_20210119_Oliver-1")]
+    partial class _20210119_Oliver1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,6 +239,9 @@ namespace PriceQuationApi.Migrations
                     b.Property<string>("BomItemId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("BomAssemblyPartNumber")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("DepartemntId")
                         .HasColumnType("int");
 
@@ -262,6 +267,8 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("BomItemId");
+
+                    b.HasIndex("BomAssemblyPartNumber");
 
                     b.ToTable("MeasuringItem");
                 });
@@ -434,6 +441,10 @@ namespace PriceQuationApi.Migrations
 
             modelBuilder.Entity("PriceQuationApi.Model.MeasuringItem", b =>
                 {
+                    b.HasOne("PriceQuationApi.Model.Bom", null)
+                        .WithMany("MeasuringItems")
+                        .HasForeignKey("BomAssemblyPartNumber");
+
                     b.HasOne("PriceQuationApi.Model.BomItem", "BomItem")
                         .WithOne("MeasuringItem")
                         .HasForeignKey("PriceQuationApi.Model.MeasuringItem", "BomItemId")
@@ -483,6 +494,8 @@ namespace PriceQuationApi.Migrations
             modelBuilder.Entity("PriceQuationApi.Model.Bom", b =>
                 {
                     b.Navigation("BomItems");
+
+                    b.Navigation("MeasuringItems");
 
                     b.Navigation("QuoteDetails");
                 });

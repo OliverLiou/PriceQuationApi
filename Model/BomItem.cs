@@ -78,5 +78,7 @@ namespace PriceQuationApi.Model
         public string Remark { get; set; }
 
         public Bom Bom { get; set; }
+
+        public MeasuringItem MeasuringItem { get; set; }
     }
 }
