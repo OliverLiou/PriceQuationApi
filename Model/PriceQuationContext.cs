@@ -10,13 +10,13 @@ namespace PriceQuationApi.Model
 
         }
 
-        public DbSet<Bom> Boms { get; set; }
-        public DbSet<QuoteDetail> QuoteDetails { get; set; }
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Bom> Bom { get; set; }
+        public DbSet<QuoteDetail> QuoteDetail { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<User> User { get; set; }
 
-        public DbSet<BomItem> BomItems { get; set; }
-        public DbSet<QuoteItem> QuoteItems { get; set; }
+        public DbSet<BomItem> BomItem { get; set; }
+        public DbSet<QuoteItem> QuoteItem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,7 +30,7 @@ namespace PriceQuationApi.Model
                 .HasIndex(b => b.No).IsUnique();
 
             modelBuilder.Entity<MeasuringItem>()
-                .HasKey(m => m.BomItemId);
+                .HasKey(m => m.No);
 
             modelBuilder.Entity<QuoteDetail>()
                .HasKey(q => q.QuoteDetailId);
@@ -52,9 +52,9 @@ namespace PriceQuationApi.Model
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<MeasuringItem>()
-                .HasOne(m => m.BomItem)
-                .WithOne( b => b.MeasuringItem)
-                .HasForeignKey<MeasuringItem>(m => m.BomItemId)
+                .HasOne(b => b.Bom)
+                .WithMany(b => b.MeasuringItems)
+                .HasForeignKey(b => b.AssemblyPartNumber)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<QuoteDetail>()

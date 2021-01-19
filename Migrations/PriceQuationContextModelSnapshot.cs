@@ -59,7 +59,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasKey("AssemblyPartNumber");
 
-                    b.ToTable("Boms");
+                    b.ToTable("Bom");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.BomItem", b =>
@@ -141,7 +141,7 @@ namespace PriceQuationApi.Migrations
                     b.HasIndex("No")
                         .IsUnique();
 
-                    b.ToTable("BomItems");
+                    b.ToTable("BomItem");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.Department", b =>
@@ -161,7 +161,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Department");
 
                     b.HasData(
                         new
@@ -234,10 +234,14 @@ namespace PriceQuationApi.Migrations
 
             modelBuilder.Entity("PriceQuationApi.Model.MeasuringItem", b =>
                 {
-                    b.Property<string>("BomItemId")
+                    b.Property<string>("No")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("DepartemntId")
+                    b.Property<string>("AssemblyPartNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("DepartemntId")
                         .HasColumnType("int");
 
                     b.Property<string>("MeasuringName")
@@ -246,22 +250,28 @@ namespace PriceQuationApi.Migrations
                     b.Property<string>("MeasuringRemark")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("MeasuringTotal")
+                    b.Property<decimal?>("MeasuringTotal")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MeasuringTotalRemark")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("MeasuringUnitFee")
+                    b.Property<decimal?>("MeasuringUnitFee")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("NeedMeausring")
+                    b.Property<bool?>("NeedMeausring")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<string>("PartNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("BomItemId");
+                    b.HasKey("No");
+
+                    b.HasIndex("AssemblyPartNumber");
 
                     b.ToTable("MeasuringItem");
                 });
@@ -295,7 +305,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuoteDetails");
+                    b.ToTable("QuoteDetail");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.QuoteItem", b =>
@@ -316,7 +326,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasIndex("DepartemntId");
 
-                    b.ToTable("QuoteItems");
+                    b.ToTable("QuoteItem");
 
                     b.HasData(
                         new
@@ -418,7 +428,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.BomItem", b =>
@@ -434,13 +444,13 @@ namespace PriceQuationApi.Migrations
 
             modelBuilder.Entity("PriceQuationApi.Model.MeasuringItem", b =>
                 {
-                    b.HasOne("PriceQuationApi.Model.BomItem", "BomItem")
-                        .WithOne("MeasuringItem")
-                        .HasForeignKey("PriceQuationApi.Model.MeasuringItem", "BomItemId")
+                    b.HasOne("PriceQuationApi.Model.Bom", "Bom")
+                        .WithMany("MeasuringItems")
+                        .HasForeignKey("AssemblyPartNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BomItem");
+                    b.Navigation("Bom");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.QuoteDetail", b =>
@@ -484,12 +494,9 @@ namespace PriceQuationApi.Migrations
                 {
                     b.Navigation("BomItems");
 
-                    b.Navigation("QuoteDetails");
-                });
+                    b.Navigation("MeasuringItems");
 
-            modelBuilder.Entity("PriceQuationApi.Model.BomItem", b =>
-                {
-                    b.Navigation("MeasuringItem");
+                    b.Navigation("QuoteDetails");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.Department", b =>

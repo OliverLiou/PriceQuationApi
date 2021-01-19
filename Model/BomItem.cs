@@ -5,7 +5,7 @@ namespace PriceQuationApi.Model
     public class BomItem
     {
         [Key]
-        [Display(Name = "BomItem編號")]
+        [Display(Name = "編號")]
         public string No { get; set; }
 
         [Required]
@@ -79,6 +79,5 @@ namespace PriceQuationApi.Model
 
         public Bom Bom { get; set; }
 
-        public MeasuringItem MeasuringItem { get; set; }
     }
 }

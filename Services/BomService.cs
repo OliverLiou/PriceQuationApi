@@ -36,7 +36,7 @@ namespace PriceQuationApi.Services
             {
                 foreach (var bom in Boms)
                 {
-                    _context.Boms.Add(bom);
+                    _context.Bom.Add(bom);
                 }
                 await _context.SaveChangesAsync();
                 return Boms;
@@ -51,7 +51,7 @@ namespace PriceQuationApi.Services
         {
             try
             {
-                var user = await _context.Users.FindAsync(Id);
+                var user = await _context.User.FindAsync(Id);
                 return user;
             }
             catch (Exception ex)
@@ -109,7 +109,7 @@ namespace PriceQuationApi.Services
             try
             {
                 int Id = Convert.ToInt16(quoteItemId);
-                var quoteItem = await _context.QuoteItems.Where(q => q.QuoteItemId == Id).FirstOrDefaultAsync();
+                var quoteItem = await _context.QuoteItem.Where(q => q.QuoteItemId == Id).FirstOrDefaultAsync();
                 if (quoteItem == null)
                     throw new Exception(string.Format("quoteItemId = {0} 不存在，請聯絡PLM管理者！", quoteItemId));
                 return quoteItem.QuoteItemId;
@@ -129,7 +129,7 @@ namespace PriceQuationApi.Services
         {
             try
             {
-                var quoteItem = await _context.QuoteItems.Where(q => q.ResponsibleItem.Contains(category)).AsNoTracking().FirstOrDefaultAsync();
+                var quoteItem = await _context.QuoteItem.Where(q => q.ResponsibleItem.Contains(category)).AsNoTracking().FirstOrDefaultAsync();
                 if (quoteItem == null)
                     throw new Exception("系統無法識別 " + category);
 
@@ -145,7 +145,7 @@ namespace PriceQuationApi.Services
         {
             try
             {
-                var Boms = await _context.Boms.ToListAsync();
+                var Boms = await _context.Bom.ToListAsync();
                 return Boms;
             }
             catch (Exception ex)
