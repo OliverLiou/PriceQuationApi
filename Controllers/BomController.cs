@@ -16,18 +16,18 @@ namespace PriceQuationApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BomController: ControllerBase
+    public class BomController : ControllerBase
     {
         private IBomService _service;
 
-        public BomController (IBomService service)
+        public BomController(IBomService service)
         {
             _service = service;
         }
 
         [HttpPost("CreateBom")]
-        public async Task<IActionResult> CreateBom([FromForm(Name="file")] IFormFileCollection excelfiles)
-        { 
+        public async Task<IActionResult> CreateBom([FromForm(Name = "file")] IFormFileCollection excelfiles)
+        {
             try
             {
                 //判斷丟過來的Bom 是否有資料
@@ -63,17 +63,17 @@ namespace PriceQuationApi.Controllers
                         sheetList.Add(sheet);
                     }
                 }
-                
+
                 //組成Bom
                 List<Bom> Boms = new List<Bom>();
-                foreach(var sheet in sheetList)
+                foreach (var sheet in sheetList)
                 {
-                    Boms.Add(await SetBomData(sheet,evaluator));
+                    Boms.Add(await SetBomData(sheet, evaluator));
                 }
                 await _service.CreateBoms(Boms);
                 return Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("Error", ex.Message);
                 return BadRequest(ModelState);
@@ -94,9 +94,9 @@ namespace PriceQuationApi.Controllers
                 return BadRequest(ModelState);
             }
         }
-        
+
         #region Function
-        private async Task<Bom> SetBomData(ISheet sheet,IFormulaEvaluator evaluator)
+        private async Task<Bom> SetBomData(ISheet sheet, IFormulaEvaluator evaluator)
         {
             string ErrMsg = string.Empty;
             Bom Bom = new Bom();
@@ -104,19 +104,19 @@ namespace PriceQuationApi.Controllers
             List<QuoteDetail> quoteDetails = new List<QuoteDetail>();
             try
             {
-                for(int i =2 ;i<=6 ;i++)
+                for (int i = 2; i <= 6; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     ICell cell = row.GetCell(10);
-                    var cellValue = evaluator.Evaluate(cell) ;
-                    if(cellValue == null)
+                    var cellValue = evaluator.Evaluate(cell);
+                    if (cellValue == null)
                     {
-                        data.Add(string.Empty);    
+                        data.Add(string.Empty);
                         continue;
                     }
-                    if(cellValue.CellType == CellType.Formula)
+                    if (cellValue.CellType == CellType.Formula)
                     {
-                       data.Add(cellValue.StringValue);
+                        data.Add(cellValue.StringValue);
                     }
                     else if (cellValue.CellType == CellType.Numeric)
                     {
@@ -126,7 +126,7 @@ namespace PriceQuationApi.Controllers
                     {
                         data.Add(string.Empty);
                     }
-                    else 
+                    else
                     {
                         data.Add(cellValue.StringValue);
                     }
@@ -143,18 +143,18 @@ namespace PriceQuationApi.Controllers
                 //組成quoteDetails
                 //拿取中間區資料
                 PlmMiddle plmMiddle = await _service.GetMiddleData(Bom.AssemblyPartNumber);
-                if(plmMiddle == null)
+                if (plmMiddle == null)
                     throw new Exception("PLM中間區找不到「總成件號」為：" + Bom.AssemblyPartNumber + "的資料！請確認，總成資料是否正確");
                 //放入QuoteDetail
                 var quoters = plmMiddle.QUOTER.Split(',');
                 var quote_Times = plmMiddle.QUOTE_TIME.Split(',');
-                if(quoters.Length == 0)
-                    throw new Exception(string.Format("PLM中間區，立項單號：{0}，總成件號{1}，未填寫報價單位，請連絡PLM管理者" ,
-                                                      plmMiddle.OPPO, Bom.AssemblyPartNumber));                          
+                if (quoters.Length == 0)
+                    throw new Exception(string.Format("PLM中間區，立項單號：{0}，總成件號{1}，未填寫報價單位，請連絡PLM管理者",
+                                                      plmMiddle.OPPO, Bom.AssemblyPartNumber));
                 else if (quoters.Length != quote_Times.Length)
                     throw new Exception(string.Format("PLM中間區，立項單號：{0}，總成件號{1}，報價單位與報價時間數量不正確！，請連絡PLM管理者",
                                                       plmMiddle.OPPO, Bom.AssemblyPartNumber));
-                for(int i =0 ;i<quoters.Length;i++)
+                for (int i = 0; i < quoters.Length; i++)
                 {
                     QuoteDetail quoteDetail = new QuoteDetail();
                     quoteDetail.AssemblyPartNumber = Bom.AssemblyPartNumber;
@@ -162,58 +162,58 @@ namespace PriceQuationApi.Controllers
                     quoteDetail.QuoteTime = Convert.ToDateTime(quote_Times[i]);
                     quoteDetails.Add(quoteDetail);
                 }
-                
+
                 //讀取細部資料
                 List<BomItem> bomItems = new List<BomItem>();
-                for(int i =10;i<sheet.LastRowNum;i++)
+                for (int i = 10; i < sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     List<ICell> Cells = row.Cells;
                     bool read = false;
-                    for(int j =1 ; j<=16 ; j++)
+                    for (int j = 1; j <= 16; j++)
                     {
-                        if(j ==13 | j ==14 | j==15)
+                        if (j == 13 | j == 14 | j == 15)
                             continue; //版次 圖號 版次 不看
-                        else 
+                        else
                         {
-                            if(Cells[j].ToString().Length > 0)
+                            if (Cells[j].ToString().Length > 0)
                             {
                                 read = true;
                                 break;
                             }
                         }
                     }
-                    
-                    if(read)
+
+                    if (read)
                     {
                         string No = row.GetCell(0).ToString();
                         //partlevel 
-                        int partlevel = -1 ; //假設為未填寫
-                        for(int j = 1 ; j <=9 ; j++)
+                        int partlevel = -1; //假設為未填寫
+                        for (int j = 1; j <= 9; j++)
                         {
-                            if(IsHook(row.GetCell(j).ToString()))
+                            if (IsHook(row.GetCell(j).ToString()))
                             {
-                                partlevel = j-1; //-1 是因為 階層從0開始，但j是表示欄號
+                                partlevel = j - 1; //-1 是因為 階層從0開始，但j是表示欄號
                                 break;
                             }
                         }
                         //新件 or 延用
                         string neworold = string.Empty;
-                        if(IsHook(row.GetCell(28).ToString()))
-                            neworold ="Old";
-                        else if(IsHook(row.GetCell(29).ToString()))
+                        if (IsHook(row.GetCell(28).ToString()))
+                            neworold = "Old";
+                        else if (IsHook(row.GetCell(29).ToString()))
                             neworold = "New";
                         //進口、支給、自製、外包
                         string source = string.Empty;
-                        if(neworold == "New")
+                        if (neworold == "New")
                         {
                             for (int j = 31; j <= 34; j++)
                             {
-                                if(IsHook(row.GetCell(j).ToString()))
+                                if (IsHook(row.GetCell(j).ToString()))
                                 {
-                                    if(j ==31)
+                                    if (j == 31)
                                         source = "進口件";
-                                    else if(j==32) 
+                                    else if (j == 32)
                                         source = "支給件";
                                     else if (j == 33)
                                         source = "自製件";
@@ -228,9 +228,9 @@ namespace PriceQuationApi.Controllers
                         }
                         //數量
                         decimal quantity = -1M;
-                        if(row.GetCell(35).ToString()!= string.Empty)
+                        if (row.GetCell(35).ToString() != string.Empty)
                             decimal.TryParse(row.GetCell(35).ToString(), out quantity);
-                        
+
                         var bomItem = new BomItem()
                         {
                             No = Bom.AssemblyPartNumber + "-" + No,
@@ -253,49 +253,51 @@ namespace PriceQuationApi.Controllers
                             Quantity = quantity
                         };
                         //檢查有無空值
-                        BomItemCheckEmpty(Bom.AssemblyPartNumber,bomItem,ref ErrMsg);
+                        BomItemCheckEmpty(Bom.AssemblyPartNumber, bomItem, ref ErrMsg);
                         bomItems.Add(bomItem);
                     }
                 }
 
                 if (ErrMsg.Length > 0)
                     throw new Exception(ErrMsg);
-
                 Bom.BomItems = bomItems;
+                //Copy資料去 MeasuringItem
+                Bom.MeasuringItems = _service.CreateMeausringItems(bomItems).ToList();
+                Bom.FixtureItems = _service.CreateFixtureItems(bomItems).ToList();
                 Bom.QuoteDetails = quoteDetails;
                 Bom.Status = 1; //Bom表匯入
                 return Bom;
             }
-            catch(Exception ex)
-            {    
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
-    
+
         private bool IsHook(string value)
         {
             value = value.Trim();
-            if(value == "V" | value == "v")
+            if (value == "V" | value == "v")
                 return true;
             else
                 return false;
         }
 
-        private static void BomItemCheckEmpty(string assemblyPartNumber,BomItem bomItem, ref string errMsg)
+        private static void BomItemCheckEmpty(string assemblyPartNumber, BomItem bomItem, ref string errMsg)
         {
-            if(bomItem.No.Replace(assemblyPartNumber +"-","") == string.Empty)
-                errMsg += string.Format("總成件號：{0}，件號：{1}，『No』未填寫！",assemblyPartNumber,bomItem.PartNumber) + Environment.NewLine;
-            if(bomItem.PartLevel == -1)
+            if (bomItem.No.Replace(assemblyPartNumber + "-", "") == string.Empty)
+                errMsg += string.Format("總成件號：{0}，件號：{1}，『No』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
+            if (bomItem.PartLevel == -1)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『構成關係』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
-            if(bomItem.PartNumber == string.Empty)
+            if (bomItem.PartNumber == string.Empty)
                 errMsg += string.Format("總成件號：{0}，No：{1}，『件號』未填寫！", assemblyPartNumber, bomItem.No) + Environment.NewLine;
-            if(bomItem.NeworOld == string.Empty)
+            if (bomItem.NeworOld == string.Empty)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『沿用』or『新件』未勾選！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
             else if (bomItem.NeworOld == "Old" && bomItem.OldCarType == string.Empty)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『沿用車型』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
-            if(bomItem.Source ==string.Empty)
+            if (bomItem.Source == string.Empty)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『進口』or『支給』or『自製』or『外包』未勾選！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
-            if(bomItem.Quantity <= 0M)
+            if (bomItem.Quantity <= 0M)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『數量』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
         }
         #endregion

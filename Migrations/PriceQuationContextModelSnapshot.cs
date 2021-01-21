@@ -232,6 +232,74 @@ namespace PriceQuationApi.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PriceQuationApi.Model.FixtureItem", b =>
+                {
+                    b.Property<string>("No")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AssemblyPartNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("DepartemntId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EngineeringName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EngineeringOrder")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EquipmentName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("EquipmentQuantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("EquipmentRemark")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("EquipmentTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("EquipmentUnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("FixtureName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("FixtureQuantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("FixtureRemark")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("FixtureTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("FixtureUnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool?>("NeedEquipment")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("NeedFixture")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PartNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Share")
+                        .HasColumnType("bit");
+
+                    b.HasKey("No");
+
+                    b.HasIndex("AssemblyPartNumber");
+
+                    b.ToTable("FixtureItem");
+                });
+
             modelBuilder.Entity("PriceQuationApi.Model.MeasuringItem", b =>
                 {
                     b.Property<string>("No")
@@ -442,6 +510,17 @@ namespace PriceQuationApi.Migrations
                     b.Navigation("Bom");
                 });
 
+            modelBuilder.Entity("PriceQuationApi.Model.FixtureItem", b =>
+                {
+                    b.HasOne("PriceQuationApi.Model.Bom", "Bom")
+                        .WithMany("FixtureItems")
+                        .HasForeignKey("AssemblyPartNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bom");
+                });
+
             modelBuilder.Entity("PriceQuationApi.Model.MeasuringItem", b =>
                 {
                     b.HasOne("PriceQuationApi.Model.Bom", "Bom")
@@ -493,6 +572,8 @@ namespace PriceQuationApi.Migrations
             modelBuilder.Entity("PriceQuationApi.Model.Bom", b =>
                 {
                     b.Navigation("BomItems");
+
+                    b.Navigation("FixtureItems");
 
                     b.Navigation("MeasuringItems");
 

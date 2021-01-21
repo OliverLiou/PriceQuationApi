@@ -16,6 +16,8 @@ namespace PriceQuationApi.Model
         public DbSet<User> User { get; set; }
 
         public DbSet<BomItem> BomItem { get; set; }
+        public DbSet<MeasuringItem> MeasuringItem { get; set; }
+        public DbSet<FixtureItem> FixtureItem { get; set; }
         public DbSet<QuoteItem> QuoteItem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,12 +34,14 @@ namespace PriceQuationApi.Model
             modelBuilder.Entity<MeasuringItem>()
                 .HasKey(m => m.No);
 
+            modelBuilder.Entity<FixtureItem>()
+                .HasKey(f => f.No);
+
             modelBuilder.Entity<QuoteDetail>()
                .HasKey(q => q.QuoteDetailId);
 
             modelBuilder.Entity<QuoteItem>()
                .HasKey(q => q.QuoteItemId);
-
 
             modelBuilder.Entity<Department>()
                .HasKey(d => d.DepartmentId);
@@ -54,6 +58,12 @@ namespace PriceQuationApi.Model
             modelBuilder.Entity<MeasuringItem>()
                 .HasOne(b => b.Bom)
                 .WithMany(b => b.MeasuringItems)
+                .HasForeignKey(b => b.AssemblyPartNumber)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FixtureItem>()
+                .HasOne(b => b.Bom)
+                .WithMany(b => b.FixtureItems)
                 .HasForeignKey(b => b.AssemblyPartNumber)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -104,8 +114,6 @@ namespace PriceQuationApi.Model
                 new QuoteItem() { QuoteItemId = 10, ResponsibleItem = "打樣費", DepartemntId = 2 },
                 new QuoteItem() { QuoteItemId = 11, ResponsibleItem = "試驗費", DepartemntId = 7 }
             );
-
-
         }
     }
 }

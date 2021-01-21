@@ -19,6 +19,9 @@ namespace PriceQuationApi.Services
         Task<int> GetQuoteItem(string quoteItemId);
         Task<int> SetDepartmentId(string category);
         Task<IEnumerable<Bom>> GetBomsAsync();
+
+        IEnumerable<MeasuringItem> CreateMeausringItems(List<BomItem> bomItems);
+        IEnumerable<FixtureItem> CreateFixtureItems(List<BomItem> bomItems);
     }
 
     public class BomService : IBomService
@@ -147,6 +150,52 @@ namespace PriceQuationApi.Services
             {
                 var Boms = await _context.Bom.ToListAsync();
                 return Boms;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    
+        public IEnumerable<MeasuringItem> CreateMeausringItems(List<BomItem> bomItems)
+        {
+            try
+            {
+                List<MeasuringItem> measuringItems = new List<MeasuringItem>();
+                foreach(var item in bomItems)
+                {
+                    MeasuringItem measuringItem = new MeasuringItem()
+                    {
+                        No = item.No,
+                        AssemblyPartNumber = item.AssemblyPartNumber,
+                        PartNumber = item.PartNumber
+                    };
+                    measuringItems.Add(measuringItem);
+                }
+                return measuringItems;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    
+        public IEnumerable<FixtureItem> CreateFixtureItems(List<BomItem> bomItems)
+        {
+            try
+            {
+                List<FixtureItem> fixtureItems = new List<FixtureItem>();
+                foreach(var item in bomItems)
+                {
+                    FixtureItem fixtureItem = new FixtureItem()
+                    {
+                        No = item.No,
+                        AssemblyPartNumber = item.AssemblyPartNumber,
+                        PartNumber = item.PartNumber
+                    };
+                    fixtureItems.Add(fixtureItem);
+                }
+                return fixtureItems;
             }
             catch (Exception ex)
             {

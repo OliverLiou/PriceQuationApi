@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PriceQuationApi.Migrations
 {
-    public partial class _20201224init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Boms",
+                name: "Bom",
                 columns: table => new
                 {
                     AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -25,11 +25,11 @@ namespace PriceQuationApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Boms", x => x.AssemblyPartNumber);
+                    table.PrimaryKey("PK_Bom", x => x.AssemblyPartNumber);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departments",
+                name: "Department",
                 columns: table => new
                 {
                     DepartmentId = table.Column<int>(type: "int", nullable: false)
@@ -39,11 +39,11 @@ namespace PriceQuationApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.DepartmentId);
+                    table.PrimaryKey("PK_Department", x => x.DepartmentId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BomItems",
+                name: "BomItem",
                 columns: table => new
                 {
                     No = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -71,17 +71,79 @@ namespace PriceQuationApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BomItems", x => x.No);
+                    table.PrimaryKey("PK_BomItem", x => x.No);
                     table.ForeignKey(
-                        name: "FK_BomItems_Boms_AssemblyPartNumber",
+                        name: "FK_BomItem_Bom_AssemblyPartNumber",
                         column: x => x.AssemblyPartNumber,
-                        principalTable: "Boms",
+                        principalTable: "Bom",
                         principalColumn: "AssemblyPartNumber",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuoteItems",
+                name: "FixtureItem",
+                columns: table => new
+                {
+                    No = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PartNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EngineeringName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EngineeringOrder = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Share = table.Column<bool>(type: "bit", nullable: true),
+                    NeedFixture = table.Column<bool>(type: "bit", nullable: true),
+                    FixtureName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FixtureQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    DepartemntId = table.Column<int>(type: "int", nullable: true),
+                    FixtureRemark = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FixtureUnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    FixtureTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    NeedEquipment = table.Column<bool>(type: "bit", nullable: true),
+                    EquipmentName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EquipmentQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    EquipmentUnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    EquipmentTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    EquipmentRemark = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FixtureItem", x => x.No);
+                    table.ForeignKey(
+                        name: "FK_FixtureItem_Bom_AssemblyPartNumber",
+                        column: x => x.AssemblyPartNumber,
+                        principalTable: "Bom",
+                        principalColumn: "AssemblyPartNumber",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MeasuringItem",
+                columns: table => new
+                {
+                    No = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PartNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NeedMeausring = table.Column<bool>(type: "bit", nullable: true),
+                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    MeasuringName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MeasuringRemark = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DepartemntId = table.Column<int>(type: "int", nullable: true),
+                    MeasuringUnitFee = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    MeasuringTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    MeasuringTotalRemark = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeasuringItem", x => x.No);
+                    table.ForeignKey(
+                        name: "FK_MeasuringItem_Bom_AssemblyPartNumber",
+                        column: x => x.AssemblyPartNumber,
+                        principalTable: "Bom",
+                        principalColumn: "AssemblyPartNumber",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuoteItem",
                 columns: table => new
                 {
                     QuoteItemId = table.Column<int>(type: "int", nullable: false)
@@ -91,17 +153,17 @@ namespace PriceQuationApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuoteItems", x => x.QuoteItemId);
+                    table.PrimaryKey("PK_QuoteItem", x => x.QuoteItemId);
                     table.ForeignKey(
-                        name: "FK_QuoteItems_Departments_DepartemntId",
+                        name: "FK_QuoteItem_Department_DepartemntId",
                         column: x => x.DepartemntId,
-                        principalTable: "Departments",
+                        principalTable: "Department",
                         principalColumn: "DepartmentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -114,46 +176,46 @@ namespace PriceQuationApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_User", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Users_Departments_DepartmentId",
+                        name: "FK_User_Department_DepartmentId",
                         column: x => x.DepartmentId,
-                        principalTable: "Departments",
+                        principalTable: "Department",
                         principalColumn: "DepartmentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuoteDetails",
+                name: "QuoteDetail",
                 columns: table => new
                 {
                     QuoteDetailId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DepartemntId = table.Column<int>(type: "int", nullable: false),
+                    QuoteItemId = table.Column<int>(type: "int", nullable: false),
                     QuoteTime = table.Column<DateTime>(type: "Date", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true),
                     FinishedTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuoteDetails", x => x.QuoteDetailId);
+                    table.PrimaryKey("PK_QuoteDetail", x => x.QuoteDetailId);
                     table.ForeignKey(
-                        name: "FK_QuoteDetails_Boms_AssemblyPartNumber",
+                        name: "FK_QuoteDetail_Bom_AssemblyPartNumber",
                         column: x => x.AssemblyPartNumber,
-                        principalTable: "Boms",
+                        principalTable: "Bom",
                         principalColumn: "AssemblyPartNumber",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_QuoteDetails_Users_UserId",
+                        name: "FK_QuoteDetail_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
-                table: "Departments",
+                table: "Department",
                 columns: new[] { "DepartmentId", "Code", "Name" },
                 values: new object[,]
                 {
@@ -171,7 +233,7 @@ namespace PriceQuationApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "QuoteItems",
+                table: "QuoteItem",
                 columns: new[] { "QuoteItemId", "DepartemntId", "ResponsibleItem" },
                 values: new object[,]
                 {
@@ -189,50 +251,72 @@ namespace PriceQuationApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BomItems_AssemblyPartNumber",
-                table: "BomItems",
+                name: "IX_BomItem_AssemblyPartNumber",
+                table: "BomItem",
                 column: "AssemblyPartNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuoteDetails_AssemblyPartNumber",
-                table: "QuoteDetails",
+                name: "IX_BomItem_No",
+                table: "BomItem",
+                column: "No",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FixtureItem_AssemblyPartNumber",
+                table: "FixtureItem",
                 column: "AssemblyPartNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuoteDetails_UserId",
-                table: "QuoteDetails",
+                name: "IX_MeasuringItem_AssemblyPartNumber",
+                table: "MeasuringItem",
+                column: "AssemblyPartNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuoteDetail_AssemblyPartNumber",
+                table: "QuoteDetail",
+                column: "AssemblyPartNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuoteDetail_UserId",
+                table: "QuoteDetail",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuoteItems_DepartemntId",
-                table: "QuoteItems",
+                name: "IX_QuoteItem_DepartemntId",
+                table: "QuoteItem",
                 column: "DepartemntId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_DepartmentId",
-                table: "Users",
+                name: "IX_User_DepartmentId",
+                table: "User",
                 column: "DepartmentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BomItems");
+                name: "BomItem");
 
             migrationBuilder.DropTable(
-                name: "QuoteDetails");
+                name: "FixtureItem");
 
             migrationBuilder.DropTable(
-                name: "QuoteItems");
+                name: "MeasuringItem");
 
             migrationBuilder.DropTable(
-                name: "Boms");
+                name: "QuoteDetail");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "QuoteItem");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "Bom");
+
+            migrationBuilder.DropTable(
+                name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Department");
         }
     }
 }

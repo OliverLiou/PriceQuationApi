@@ -59,7 +59,10 @@ namespace PriceQuationApi.Model
         //[一對多] BomItem
         public List<BomItem> BomItems { get; set; }
 
-        //[一對多] BomItem
+        //[一對多] MeasuringItem
         public List<MeasuringItem> MeasuringItems { get; set; }
+
+        //[一對多] FixtureItem
+        public List<FixtureItem> FixtureItems { get; set; }
     }
 }
