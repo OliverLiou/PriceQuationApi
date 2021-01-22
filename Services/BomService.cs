@@ -22,6 +22,8 @@ namespace PriceQuationApi.Services
 
         IEnumerable<MeasuringItem> CreateMeausringItems(List<BomItem> bomItems);
         IEnumerable<FixtureItem> CreateFixtureItems(List<BomItem> bomItems);
+
+        Task<Bom> GetBomDetailsAsync(string assemblyPartNumber);
     }
 
     public class BomService : IBomService
@@ -196,6 +198,22 @@ namespace PriceQuationApi.Services
                     fixtureItems.Add(fixtureItem);
                 }
                 return fixtureItems;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    
+        public async Task<Bom> GetBomDetailsAsync(string assemblyPartNumber)
+        {
+            try
+            {
+                var bom = await _context.Bom.Where(b => b.AssemblyPartNumber == assemblyPartNumber)
+                                            .Include(b => b.BomItems)
+                                            .Include(b => b.MeasuringItems)
+                                            .Include(b => b.FixtureItems).FirstOrDefaultAsync();
+                return bom;
             }
             catch (Exception ex)
             {

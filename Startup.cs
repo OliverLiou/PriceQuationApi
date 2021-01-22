@@ -32,6 +32,10 @@ namespace PriceQuationApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                                       options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
             services.AddDbContext<PriceQuationContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("PriceQuationContext")));
@@ -52,7 +56,7 @@ namespace PriceQuationApi
             //跨域
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:3000", "http://localhost:5000","http://localhost:8080")
+                builder.WithOrigins("http://localhost:3000", "http://localhost:5000","http://localhost:8080","http://localhost:8081")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();

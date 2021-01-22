@@ -95,6 +95,24 @@ namespace PriceQuationApi.Controllers
             }
         }
 
+        [HttpPost("GetBomDetail/{assemblyPartNumber}")]
+        public async Task<ActionResult<Bom>> GetBomDetail(string assemblyPartNumber)
+        {
+            try
+            {
+                Bom bom = new Bom();
+                bom = await _service.GetBomDetailsAsync(assemblyPartNumber);
+                if(bom == null)
+                    return NotFound();
+
+                return bom;
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Error",ex.Message);
+                return BadRequest(ModelState);
+            }
+        }
         #region Function
         private async Task<Bom> SetBomData(ISheet sheet, IFormulaEvaluator evaluator)
         {
