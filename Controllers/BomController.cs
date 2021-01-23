@@ -95,7 +95,7 @@ namespace PriceQuationApi.Controllers
             }
         }
 
-        [HttpPost("GetBomDetail/{assemblyPartNumber}")]
+        [HttpGet("GetBomDetail/{assemblyPartNumber}")]
         public async Task<ActionResult<Bom>> GetBomDetail(string assemblyPartNumber)
         {
             try

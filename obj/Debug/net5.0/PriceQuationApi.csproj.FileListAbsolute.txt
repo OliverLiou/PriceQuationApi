@@ -140,3 +140,7 @@ C:\PQP_Web\PriceQuationApi\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
 C:\PQP_Web\PriceQuationApi\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\PQP_Web\PriceQuationApi\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\PQP_Web\PriceQuationApi\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+D:\PriceQutation\PriceQuationApi\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\PriceQutation\PriceQuationApi\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\PriceQutation\PriceQuationApi\bin\Debug\net5.0\Newtonsoft.Json.dll
+D:\PriceQutation\PriceQuationApi\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll

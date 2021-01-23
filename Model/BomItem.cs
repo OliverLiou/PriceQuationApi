@@ -53,7 +53,7 @@ namespace PriceQuationApi.Model
         [Display(Name = "途程代號(4)")]
         public string RoutingNo4 { get; set; }
 
-        [Display(Name = "途程代號(4)")]
+        [Display(Name = "途程規範(4)")]
         public string RoutingRule4 { get; set; }
 
         [Required]
