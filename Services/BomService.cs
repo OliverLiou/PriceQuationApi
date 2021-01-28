@@ -212,7 +212,8 @@ namespace PriceQuationApi.Services
                 var bom = await _context.Bom.Where(b => b.AssemblyPartNumber == assemblyPartNumber)
                                             .Include(b => b.BomItems)
                                             .Include(b => b.MeasuringItems)
-                                            .Include(b => b.FixtureItems).FirstOrDefaultAsync();
+                                            .Include(b => b.FixtureItems)
+                                            .OrderBy(b => b.AssemblyPartNumber).FirstOrDefaultAsync();
                 return bom;
             }
             catch (Exception ex)
