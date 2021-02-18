@@ -114,6 +114,19 @@ namespace PriceQuationApi.Controllers
             }
         }
         
+        public async Task<ActionResult<BomItem>> UpdateBomDetail()
+        {
+            try
+            {
+                return NoContent();
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+        }
+
         #region Function
         private async Task<Bom> SetBomData(ISheet sheet, IFormulaEvaluator evaluator)
         {
