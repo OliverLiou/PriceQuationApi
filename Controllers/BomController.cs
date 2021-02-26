@@ -114,6 +114,7 @@ namespace PriceQuationApi.Controllers
             }
         }
         
+        [HttpPut("UpdateBomDetail")]
         public async Task<ActionResult<BomItem>> UpdateBomDetail()
         {
             try
@@ -218,7 +219,7 @@ namespace PriceQuationApi.Controllers
 
                     if (read)
                     {
-                        string No = row.GetCell(0).ToString();
+                        string No = row.GetCell(0).ToString().PadLeft(3,'0');
                         //partlevel 
                         int partlevel = -1; //假設為未填寫
                         for (int j = 1; j <= 9; j++)
