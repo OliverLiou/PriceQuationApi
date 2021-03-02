@@ -71,8 +71,11 @@ namespace PriceQuationApi.Model
         [Display(Name = "數量")]
         public decimal Quantity { get; set; }
 
-        [Display(Name = "類別")]
+        [Display(Name = "製造類別")]
         public string Category { get; set; }
+
+        [Display(Name = "模具類別")]
+        public string ModelCategory { get; set; }
 
         [Display(Name = "備註")]
         public string Remark { get; set; }

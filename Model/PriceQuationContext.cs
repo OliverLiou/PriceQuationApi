@@ -29,13 +29,19 @@ namespace PriceQuationApi.Model
                 .HasKey(b => b.No);
 
             modelBuilder.Entity<BomItem>()
-                .HasIndex(b => b.No).IsUnique();
+                .HasIndex(b => new { b.AssemblyPartNumber, b.PartNumber }).IsUnique();
 
             modelBuilder.Entity<MeasuringItem>()
                 .HasKey(m => m.No);
 
+            modelBuilder.Entity<MeasuringItem>()
+                .HasIndex(m => new { m.AssemblyPartNumber, m.PartNumber }).IsUnique();
+
             modelBuilder.Entity<FixtureItem>()
                 .HasKey(f => f.No);
+
+            modelBuilder.Entity<FixtureItem>()
+                .HasIndex(f => new { f.AssemblyPartNumber, f.PartNumber }).IsUnique();
 
             modelBuilder.Entity<QuoteDetail>()
                .HasKey(q => q.QuoteDetailId);

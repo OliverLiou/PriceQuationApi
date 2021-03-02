@@ -255,7 +255,7 @@ namespace PriceQuationApi.Controllers
                                 }
                             }
                         }
-                        else
+                        else if(neworold =="Old")
                         {
                             source = "延用件";
                         }
@@ -263,6 +263,32 @@ namespace PriceQuationApi.Controllers
                         decimal quantity = -1M;
                         if (row.GetCell(35).ToString() != string.Empty)
                             decimal.TryParse(row.GetCell(35).ToString(), out quantity);
+
+                        //製造類別
+                        string manufactureCategory = string.Empty;
+                        for(int k= 36; k<= 39; k++)
+                        {
+                            if (IsHook(row.GetCell(k).ToString()))
+                            {
+                                if (k == 36)
+                                    manufactureCategory = "沖壓件";
+                                else if (k == 37)
+                                    manufactureCategory = "塑膠件";
+                                else if (k == 38)
+                                    manufactureCategory = "鍛造件";
+                                else if (k == 39)
+                                    manufactureCategory = "其它";
+                            }
+                        }
+                        //模具類別
+                        string modelCategory = string.Empty;
+                        for(int m=40 ; m<=41 ;m++)
+                        {
+                            if (IsHook(row.GetCell(m).ToString()))
+                                modelCategory = "模具自製";
+                            else if (IsHook(row.GetCell(m).ToString()))
+                                modelCategory = "模具外包";
+                        }
 
                         var bomItem = new BomItem()
                         {
@@ -283,7 +309,9 @@ namespace PriceQuationApi.Controllers
                             RoutingRule4 = row.GetCell(27).ToString(),
                             NeworOld = neworold,
                             Source = source,
-                            Quantity = quantity
+                            Quantity = quantity,
+                            Category = manufactureCategory,
+                            ModelCategory = modelCategory 
                         };
                         //檢查有無空值
                         BomItemCheckEmpty(Bom.AssemblyPartNumber, bomItem, ref ErrMsg);

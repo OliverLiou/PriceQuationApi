@@ -77,6 +77,9 @@ namespace PriceQuationApi.Migrations
                     b.Property<string>("Material")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ModelCategory")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NeworOld")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -95,7 +98,7 @@ namespace PriceQuationApi.Migrations
 
                     b.Property<string>("PartNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
@@ -136,9 +139,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasKey("No");
 
-                    b.HasIndex("AssemblyPartNumber");
-
-                    b.HasIndex("No")
+                    b.HasIndex("AssemblyPartNumber", "PartNumber")
                         .IsUnique();
 
                     b.ToTable("BomItem");
@@ -288,14 +289,15 @@ namespace PriceQuationApi.Migrations
 
                     b.Property<string>("PartNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool?>("Share")
                         .HasColumnType("bit");
 
                     b.HasKey("No");
 
-                    b.HasIndex("AssemblyPartNumber");
+                    b.HasIndex("AssemblyPartNumber", "PartNumber")
+                        .IsUnique();
 
                     b.ToTable("FixtureItem");
                 });
@@ -332,14 +334,15 @@ namespace PriceQuationApi.Migrations
 
                     b.Property<string>("PartNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("No");
 
-                    b.HasIndex("AssemblyPartNumber");
+                    b.HasIndex("AssemblyPartNumber", "PartNumber")
+                        .IsUnique();
 
                     b.ToTable("MeasuringItem");
                 });
