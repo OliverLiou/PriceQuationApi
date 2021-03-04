@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PriceQuationApi.Model;
 
 namespace PriceQuationApi.Migrations
 {
     [DbContext(typeof(PriceQuationContext))]
-    partial class PriceQuationContextModelSnapshot : ModelSnapshot
+    [Migration("20210304143926_20210304_Oliver-1")]
+    partial class _20210304_Oliver1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
