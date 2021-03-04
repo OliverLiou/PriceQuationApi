@@ -12,10 +12,11 @@ namespace PriceQuationApi.Services
 {
     public interface IBomService
     {
+        Task<OPPO> CreateOppo(OPPO oppo);
         Task<IEnumerable<Bom>> CreateBoms(List<Bom> Boms);
         Task<User> GetUser(int Id);
 
-        Task<PlmMiddle> GetMiddleData(string assembylyPartNumber);
+        Task<PlmMiddle> GetMiddleData(string OPPOId, string assembylyPartNumber);
         Task<int> GetQuoteItem(string quoteItemId);
         Task<int> SetDepartmentId(string category);
         Task<IEnumerable<Bom>> GetBomsAsync();
@@ -24,6 +25,7 @@ namespace PriceQuationApi.Services
         IEnumerable<FixtureItem> CreateFixtureItems(List<BomItem> bomItems);
 
         Task<Bom> GetBomDetailsAsync(string assemblyPartNumber);
+        Task<List<string>> GetPlmAssemblyPNs(string OPPOId);
     }
 
     public class BomService : IBomService
@@ -35,6 +37,20 @@ namespace PriceQuationApi.Services
             _context = context;
         }
 
+        public async Task<OPPO> CreateOppo(OPPO oppo)
+        {
+            try
+            {
+                _context.OPPO.Add(oppo);
+                await _context.SaveChangesAsync();
+                return oppo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
         public async Task<IEnumerable<Bom>> CreateBoms(List<Bom> Boms)
         {
             try
@@ -65,7 +81,7 @@ namespace PriceQuationApi.Services
             }
         }
 
-        public async Task<PlmMiddle> GetMiddleData(string assemblyPartNumber)
+        public async Task<PlmMiddle> GetMiddleData(string OPPOId, string assemblyPartNumber)
         {
             PlmMiddle plmMiddle = new PlmMiddle();
             try
@@ -76,7 +92,7 @@ namespace PriceQuationApi.Services
                                                         "(CONNECT_DATA= (SERVER=dedicated)(SERVICE_NAME=HCMFDEV)));" +
                                                         "User Id = INTERFACE; Password = RFtgYHuj;";
                     oracleConnection.Open();
-                    string sql = string.Format("Select * from PLM_QPP where HC_Product='{0}'", assemblyPartNumber);
+                    string sql = string.Format("Select * from PLM_QPP where OPPO='{0}' And HC_Product='{1}'", OPPOId, assemblyPartNumber);
                     OracleCommand oracleCommand = new OracleCommand(sql, oracleConnection);
                     OracleDataReader reader = oracleCommand.ExecuteReader();
                     if (!reader.HasRows)
@@ -145,7 +161,7 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-    
+
         public async Task<IEnumerable<Bom>> GetBomsAsync()
         {
             try
@@ -158,17 +174,17 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-    
+
         public IEnumerable<MeasuringItem> CreateMeausringItems(List<BomItem> bomItems)
         {
             try
             {
                 List<MeasuringItem> measuringItems = new List<MeasuringItem>();
-                foreach(var item in bomItems)
+                foreach (var item in bomItems)
                 {
                     MeasuringItem measuringItem = new MeasuringItem()
                     {
-                        No = item.No,
+                        MeasuringItemId = item.BomItemId,
                         AssemblyPartNumber = item.AssemblyPartNumber,
                         PartNumber = item.PartNumber
                     };
@@ -181,17 +197,17 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-    
+
         public IEnumerable<FixtureItem> CreateFixtureItems(List<BomItem> bomItems)
         {
             try
             {
                 List<FixtureItem> fixtureItems = new List<FixtureItem>();
-                foreach(var item in bomItems)
+                foreach (var item in bomItems)
                 {
                     FixtureItem fixtureItem = new FixtureItem()
                     {
-                        No = item.No,
+                        FixtureItemId = item.BomItemId,
                         AssemblyPartNumber = item.AssemblyPartNumber,
                         PartNumber = item.PartNumber
                     };
@@ -204,7 +220,7 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-    
+
         public async Task<Bom> GetBomDetailsAsync(string assemblyPartNumber)
         {
             try
@@ -218,6 +234,41 @@ namespace PriceQuationApi.Services
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+        }
+
+        public async Task<List<string>> GetPlmAssemblyPNs(string OPPOId)
+        {
+            try
+            {
+                List<string> plmAssemblyPNs = new List<string>();
+                await using (var oracleConnection = new OracleConnection())
+                {
+                    oracleConnection.ConnectionString = "Data Source = (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.99.0.13)(PORT=1521))" +
+                                                        "(CONNECT_DATA= (SERVER=dedicated)(SERVICE_NAME=HCMFDEV)));" +
+                                                        "User Id = INTERFACE; Password = RFtgYHuj;";
+                    oracleConnection.Open();
+                    string sql = string.Format("Select * from PLM_QPP where OPPO='{0}'", OPPOId);
+                    OracleCommand oracleCommand = new OracleCommand(sql, oracleConnection);
+                    OracleDataReader reader = oracleCommand.ExecuteReader();
+                    if (!reader.HasRows)
+                    {
+                        //沒有資料
+                        throw new Exception(string.Format("中間區查無總成件號:{0}，請聯絡PLM管理員。", OPPOId));
+                    }
+                    while (reader.Read())
+                    {
+                        string plmAssemblyPN = reader.GetValue(reader.GetOrdinal("HC_PRODUCT")).ToString();
+                        plmAssemblyPNs.Add(plmAssemblyPN);
+                    }
+                    oracleConnection.Close();
+                }
+                return plmAssemblyPNs;
+            }
+            catch (Exception ex)
+            {
+
                 throw ex;
             }
         }

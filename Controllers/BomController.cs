@@ -25,17 +25,16 @@ namespace PriceQuationApi.Controllers
             _service = service;
         }
 
-        [HttpPost("CreateBom")]
-        public async Task<IActionResult> CreateBom([FromForm(Name = "file")] IFormFileCollection excelfiles)
+        [HttpPost("CreateBoms/{OPPOId}")]
+        public async Task<IActionResult> CreateBoms(string OPPOId,[FromForm(Name = "file")] IFormFileCollection excelfiles)
         {
             try
             {
+                if(OPPOId == null)
+                    throw new Exception("請輸入OPPO號碼。");
                 //判斷丟過來的Bom 是否有資料
-                if (excelfiles.Count <= 0)
-                {
-                    ModelState.AddModelError("Error", "請確認是否有上傳檔案！");
-                    return BadRequest(ModelState);
-                }
+                else if (excelfiles.Count <= 0)
+                    throw new Exception("請確認是否有上傳檔案！");
 
                 List<IWorkbook> workbookList = new List<IWorkbook>();
                 List<ISheet> sheetList = new List<ISheet>();
@@ -64,13 +63,20 @@ namespace PriceQuationApi.Controllers
                     }
                 }
 
+                OPPO Oppo = new OPPO()
+                {
+                    OppoId = OPPOId,
+                    Status = 0
+                };
                 //組成Bom
                 List<Bom> Boms = new List<Bom>();
                 foreach (var sheet in sheetList)
                 {
-                    Boms.Add(await SetBomData(sheet, evaluator));
+                    Boms.Add(await SetBomData(OPPOId, sheet, evaluator));
                 }
-                await _service.CreateBoms(Boms);
+                Oppo.Boms= Boms;
+                await _service.CreateOppo(Oppo);
+                // await _service.CreateBoms(Boms);
                 return Ok();
             }
             catch (Exception ex)
@@ -102,20 +108,20 @@ namespace PriceQuationApi.Controllers
             {
                 Bom bom = new Bom();
                 bom = await _service.GetBomDetailsAsync(assemblyPartNumber);
-                if(bom == null)
+                if (bom == null)
                     return NotFound();
 
                 return bom;
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Error",ex.Message);
+                ModelState.AddModelError("Error", ex.Message);
                 return BadRequest(ModelState);
             }
         }
-        
-        [HttpPut("UpdateBomDetail")]
-        public async Task<ActionResult<BomItem>> UpdateBomDetail()
+
+        [HttpPut("UpdateBomDetail/{BomItemId}")]
+        public async Task<ActionResult<BomItem>> UpdateBomDetail(string BomItemId)
         {
             try
             {
@@ -123,13 +129,13 @@ namespace PriceQuationApi.Controllers
             }
             catch (System.Exception)
             {
-                
+
                 throw;
             }
         }
 
         #region Function
-        private async Task<Bom> SetBomData(ISheet sheet, IFormulaEvaluator evaluator)
+        private async Task<Bom> SetBomData(string OPPOId, ISheet sheet, IFormulaEvaluator evaluator)
         {
             string ErrMsg = string.Empty;
             Bom Bom = new Bom();
@@ -175,9 +181,9 @@ namespace PriceQuationApi.Controllers
 
                 //組成quoteDetails
                 //拿取中間區資料
-                PlmMiddle plmMiddle = await _service.GetMiddleData(Bom.AssemblyPartNumber);
+                PlmMiddle plmMiddle = await _service.GetMiddleData(OPPOId, Bom.AssemblyPartNumber);
                 if (plmMiddle == null)
-                    throw new Exception("PLM中間區找不到「總成件號」為：" + Bom.AssemblyPartNumber + "的資料！請確認，總成資料是否正確");
+                    throw new Exception("PLM中間區【OPPO:{0}】無【總成件號:{1}】" + Bom.AssemblyPartNumber + "的資料！請確認，上傳Excel是否正確！");
                 //放入QuoteDetail
                 var quoters = plmMiddle.QUOTER.Split(',');
                 var quote_Times = plmMiddle.QUOTE_TIME.Split(',');
@@ -216,10 +222,9 @@ namespace PriceQuationApi.Controllers
                             }
                         }
                     }
-
                     if (read)
                     {
-                        string No = row.GetCell(0).ToString().PadLeft(3,'0');
+                        string No = row.GetCell(0).ToString().PadLeft(3, '0');
                         //partlevel 
                         int partlevel = -1; //假設為未填寫
                         for (int j = 1; j <= 9; j++)
@@ -255,7 +260,7 @@ namespace PriceQuationApi.Controllers
                                 }
                             }
                         }
-                        else if(neworold =="Old")
+                        else if (neworold == "Old")
                         {
                             source = "延用件";
                         }
@@ -266,7 +271,7 @@ namespace PriceQuationApi.Controllers
 
                         //製造類別
                         string manufactureCategory = string.Empty;
-                        for(int k= 36; k<= 39; k++)
+                        for (int k = 36; k <= 39; k++)
                         {
                             if (IsHook(row.GetCell(k).ToString()))
                             {
@@ -282,7 +287,7 @@ namespace PriceQuationApi.Controllers
                         }
                         //模具類別
                         string modelCategory = string.Empty;
-                        for(int m=40 ; m<=41 ;m++)
+                        for (int m = 40; m <= 41; m++)
                         {
                             if (IsHook(row.GetCell(m).ToString()))
                                 modelCategory = "模具自製";
@@ -292,7 +297,7 @@ namespace PriceQuationApi.Controllers
 
                         var bomItem = new BomItem()
                         {
-                            No = Bom.AssemblyPartNumber + "-" + No,
+                            BomItemId = Bom.AssemblyPartNumber + "-" + No,
                             PartLevel = Convert.ToInt16(partlevel),
                             PartNumber = row.GetCell(10).ToString(),
                             PartName = row.GetCell(16).ToString(),
@@ -311,7 +316,7 @@ namespace PriceQuationApi.Controllers
                             Source = source,
                             Quantity = quantity,
                             Category = manufactureCategory,
-                            ModelCategory = modelCategory 
+                            ModelCategory = modelCategory
                         };
                         //檢查有無空值
                         BomItemCheckEmpty(Bom.AssemblyPartNumber, bomItem, ref ErrMsg);
@@ -326,7 +331,6 @@ namespace PriceQuationApi.Controllers
                 Bom.MeasuringItems = _service.CreateMeausringItems(bomItems).ToList();
                 Bom.FixtureItems = _service.CreateFixtureItems(bomItems).ToList();
                 Bom.QuoteDetails = quoteDetails;
-                Bom.Status = 1; //Bom表匯入
                 return Bom;
             }
             catch (Exception ex)
@@ -346,12 +350,12 @@ namespace PriceQuationApi.Controllers
 
         private static void BomItemCheckEmpty(string assemblyPartNumber, BomItem bomItem, ref string errMsg)
         {
-            if (bomItem.No.Replace(assemblyPartNumber + "-", "") == string.Empty)
+            if (bomItem.BomItemId.Replace(assemblyPartNumber + "-", "") == string.Empty)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『No』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
             if (bomItem.PartLevel == -1)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『構成關係』未填寫！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
             if (bomItem.PartNumber == string.Empty)
-                errMsg += string.Format("總成件號：{0}，No：{1}，『件號』未填寫！", assemblyPartNumber, bomItem.No) + Environment.NewLine;
+                errMsg += string.Format("總成件號：{0}，No：{1}，『件號』未填寫！", assemblyPartNumber, bomItem.BomItemId) + Environment.NewLine;
             if (bomItem.NeworOld == string.Empty)
                 errMsg += string.Format("總成件號：{0}，件號：{1}，『沿用』or『新件』未勾選！", assemblyPartNumber, bomItem.PartNumber) + Environment.NewLine;
             else if (bomItem.NeworOld == "Old" && bomItem.OldCarType == string.Empty)

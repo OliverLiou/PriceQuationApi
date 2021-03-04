@@ -9,7 +9,7 @@ namespace PriceQuationApi.Model
         {
 
         }
-
+        public DbSet<OPPO> OPPO { get; set; }
         public DbSet<Bom> Bom { get; set; }
         public DbSet<QuoteDetail> QuoteDetail { get; set; }
         public DbSet<Department> Department { get; set; }
@@ -22,23 +22,29 @@ namespace PriceQuationApi.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OPPO>()
+                .HasKey( o => o.OppoId);
+
+            modelBuilder.Entity<Bom>()
+                .HasKey(b => b.BomId);
+
             modelBuilder.Entity<Bom>()
                 .HasKey(b => b.AssemblyPartNumber);
 
             modelBuilder.Entity<BomItem>()
-                .HasKey(b => b.No);
+                .HasKey(b => b.BomItemId);
 
             modelBuilder.Entity<BomItem>()
                 .HasIndex(b => new { b.AssemblyPartNumber, b.PartNumber }).IsUnique();
 
             modelBuilder.Entity<MeasuringItem>()
-                .HasKey(m => m.No);
+                .HasKey(m => m.MeasuringItemId);
 
             modelBuilder.Entity<MeasuringItem>()
                 .HasIndex(m => new { m.AssemblyPartNumber, m.PartNumber }).IsUnique();
 
             modelBuilder.Entity<FixtureItem>()
-                .HasKey(f => f.No);
+                .HasKey(f => f.FixtureItemId);
 
             modelBuilder.Entity<FixtureItem>()
                 .HasIndex(f => new { f.AssemblyPartNumber, f.PartNumber }).IsUnique();
@@ -54,6 +60,11 @@ namespace PriceQuationApi.Model
 
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UserId);
+
+            modelBuilder.Entity<Bom>()
+                .HasOne(b => b.OPPO)
+                .WithMany(b => b.Boms)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BomItem>()
                 .HasOne(b => b.Bom)

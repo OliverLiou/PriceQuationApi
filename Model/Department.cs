@@ -12,11 +12,9 @@ namespace PriceQuationApi.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentId { get; set; }
 
-        [Required]
         [Display(Name = "部門代號")]
         public string Code {get; set;}
 
-        [Required]
         [Display(Name = "部門名稱")]
         public string Name {get; set;}
 

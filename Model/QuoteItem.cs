@@ -10,7 +10,6 @@ namespace PriceQuationApi.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int QuoteItemId { get; set;}
 
-        [Required]
         [Display(Name = "負責事項")]
         public string ResponsibleItem { get; set; }
 
