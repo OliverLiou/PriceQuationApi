@@ -46,7 +46,7 @@ namespace PriceQuationApi
             });
             
             services.AddScoped<IBomService,BomService>();
-            
+            services.AddScoped<IOppoService, OppoService>();
             services.AddCors();
         }
 

@@ -26,11 +26,11 @@ namespace PriceQuationApi.Controllers
         }
 
         [HttpPost("CreateBoms/{OPPOId}")]
-        public async Task<IActionResult> CreateBoms(string OPPOId,[FromForm(Name = "file")] IFormFileCollection excelfiles)
+        public async Task<IActionResult> CreateBoms(string OPPOId, [FromForm(Name = "file")] IFormFileCollection excelfiles)
         {
             try
             {
-                if(OPPOId == null)
+                if (OPPOId == null)
                     throw new Exception("請輸入OPPO號碼。");
                 //判斷丟過來的Bom 是否有資料
                 else if (excelfiles.Count <= 0)
@@ -74,9 +74,8 @@ namespace PriceQuationApi.Controllers
                 {
                     Boms.Add(await SetBomData(OPPOId, sheet, evaluator));
                 }
-                Oppo.Boms= Boms;
+                Oppo.Boms = Boms;
                 await _service.CreateOppo(Oppo);
-                // await _service.CreateBoms(Boms);
                 return Ok();
             }
             catch (Exception ex)
@@ -183,7 +182,7 @@ namespace PriceQuationApi.Controllers
                 //拿取中間區資料
                 PlmMiddle plmMiddle = await _service.GetMiddleData(OPPOId, Bom.AssemblyPartNumber);
                 if (plmMiddle == null)
-                    throw new Exception("PLM中間區【OPPO:{0}】無【總成件號:{1}】" + Bom.AssemblyPartNumber + "的資料！請確認，上傳Excel是否正確！");
+                    throw new Exception(string.Format("PLM中間區【OPPO:{0}】無【總成件號:{1}】的資料！請確認，上傳Excel是否正確！", OPPOId, Bom.AssemblyPartNumber));
                 //放入QuoteDetail
                 var quoters = plmMiddle.QUOTER.Split(',');
                 var quote_Times = plmMiddle.QUOTE_TIME.Split(',');

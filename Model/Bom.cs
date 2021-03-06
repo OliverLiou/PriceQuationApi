@@ -12,6 +12,9 @@ namespace PriceQuationApi.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BomId { get; set; }
 
+        [Display(Name = "OPPO編號")]
+        public string OPPOId { get; set; }
+
         [Key]
         [Display(Name = "總成件號")]
         public string AssemblyPartNumber { get; set; }
