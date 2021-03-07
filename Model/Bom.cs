@@ -50,7 +50,7 @@ namespace PriceQuationApi.Model
         public DateTime? AllFinishTime { get; set; }
         
         //[一對多]OPPO
-        public OPPO OPPO { get; set; }
+        public Oppo Oppo { get; set; }
 
         //[一對多]QuoteDetail
         public List<QuoteDetail> QuoteDetails { get; set; }

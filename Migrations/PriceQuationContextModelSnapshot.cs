@@ -340,7 +340,7 @@ namespace PriceQuationApi.Migrations
                     b.ToTable("MeasuringItem");
                 });
 
-            modelBuilder.Entity("PriceQuationApi.Model.OPPO", b =>
+            modelBuilder.Entity("PriceQuationApi.Model.Oppo", b =>
                 {
                     b.Property<string>("OppoId")
                         .HasColumnType("nvarchar(450)");
@@ -350,7 +350,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasKey("OppoId");
 
-                    b.ToTable("OPPO");
+                    b.ToTable("Oppo");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.QuoteDetail", b =>
@@ -505,12 +505,12 @@ namespace PriceQuationApi.Migrations
 
             modelBuilder.Entity("PriceQuationApi.Model.Bom", b =>
                 {
-                    b.HasOne("PriceQuationApi.Model.OPPO", "OPPO")
+                    b.HasOne("PriceQuationApi.Model.Oppo", "Oppo")
                         .WithMany("Boms")
                         .HasForeignKey("OPPOId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("OPPO");
+                    b.Navigation("Oppo");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.BomItem", b =>
@@ -598,7 +598,7 @@ namespace PriceQuationApi.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("PriceQuationApi.Model.OPPO", b =>
+            modelBuilder.Entity("PriceQuationApi.Model.Oppo", b =>
                 {
                     b.Navigation("Boms");
                 });

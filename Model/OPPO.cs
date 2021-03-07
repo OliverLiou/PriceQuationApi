@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace PriceQuationApi.Model
 {
     //Data From PLM
-    public class OPPO
+    public class Oppo
     {
         [Key]
         [Display(Name ="Oppo編號")]

@@ -9,7 +9,7 @@ namespace PriceQuationApi.Model
         {
 
         }
-        public DbSet<OPPO> OPPO { get; set; }
+        public DbSet<Oppo> Oppo { get; set; }
         public DbSet<Bom> Bom { get; set; }
         public DbSet<QuoteDetail> QuoteDetail { get; set; }
         public DbSet<Department> Department { get; set; }
@@ -22,7 +22,7 @@ namespace PriceQuationApi.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OPPO>()
+            modelBuilder.Entity<Oppo>()
                 .HasKey( o => o.OppoId);
 
             modelBuilder.Entity<Bom>()
@@ -53,7 +53,7 @@ namespace PriceQuationApi.Model
                 .HasKey(u => u.UserId);
 
             modelBuilder.Entity<Bom>()
-                .HasOne(b => b.OPPO)
+                .HasOne(b => b.Oppo)
                 .WithMany(b => b.Boms)
                 .OnDelete(DeleteBehavior.Cascade);
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PriceQuationApi.Migrations
 {
-    public partial class _20210304init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,7 +22,7 @@ namespace PriceQuationApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OPPO",
+                name: "Oppo",
                 columns: table => new
                 {
                     OppoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -30,7 +30,7 @@ namespace PriceQuationApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OPPO", x => x.OppoId);
+                    table.PrimaryKey("PK_Oppo", x => x.OppoId);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +83,7 @@ namespace PriceQuationApi.Migrations
                     AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BomId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    OPPOId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     AssemblyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AssemblyNameEng = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Customer = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -91,16 +92,15 @@ namespace PriceQuationApi.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "Date", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "Date", nullable: true),
-                    AllFinishTime = table.Column<DateTime>(type: "Date", nullable: true),
-                    OppoId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    AllFinishTime = table.Column<DateTime>(type: "Date", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bom", x => x.AssemblyPartNumber);
                     table.ForeignKey(
-                        name: "FK_Bom_OPPO_OppoId",
-                        column: x => x.OppoId,
-                        principalTable: "OPPO",
+                        name: "FK_Bom_Oppo_OPPOId",
+                        column: x => x.OPPOId,
+                        principalTable: "Oppo",
                         principalColumn: "OppoId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -112,7 +112,7 @@ namespace PriceQuationApi.Migrations
                     BomItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PartLevel = table.Column<int>(type: "int", nullable: false),
-                    PartNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PartNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PartName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PartName_Eng = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Material = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -150,7 +150,7 @@ namespace PriceQuationApi.Migrations
                 {
                     FixtureItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PartNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PartNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EngineeringName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EngineeringOrder = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Share = table.Column<bool>(type: "bit", nullable: false),
@@ -185,7 +185,7 @@ namespace PriceQuationApi.Migrations
                 {
                     MeasuringItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AssemblyPartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PartNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PartNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NeedMeausring = table.Column<bool>(type: "bit", nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MeasuringName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -272,29 +272,24 @@ namespace PriceQuationApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bom_OppoId",
+                name: "IX_Bom_OPPOId",
                 table: "Bom",
-                column: "OppoId");
+                column: "OPPOId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BomItem_AssemblyPartNumber_PartNumber",
+                name: "IX_BomItem_AssemblyPartNumber",
                 table: "BomItem",
-                columns: new[] { "AssemblyPartNumber", "PartNumber" },
-                unique: true,
-                filter: "[AssemblyPartNumber] IS NOT NULL AND [PartNumber] IS NOT NULL");
+                column: "AssemblyPartNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FixtureItem_AssemblyPartNumber_PartNumber",
+                name: "IX_FixtureItem_AssemblyPartNumber",
                 table: "FixtureItem",
-                columns: new[] { "AssemblyPartNumber", "PartNumber" },
-                unique: true,
-                filter: "[AssemblyPartNumber] IS NOT NULL AND [PartNumber] IS NOT NULL");
+                column: "AssemblyPartNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MeasuringItem_AssemblyPartNumber_PartNumber",
+                name: "IX_MeasuringItem_AssemblyPartNumber",
                 table: "MeasuringItem",
-                columns: new[] { "AssemblyPartNumber", "PartNumber" },
-                unique: true);
+                column: "AssemblyPartNumber");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuoteDetail_AssemblyPartNumber",
@@ -341,7 +336,7 @@ namespace PriceQuationApi.Migrations
                 name: "User");
 
             migrationBuilder.DropTable(
-                name: "OPPO");
+                name: "Oppo");
 
             migrationBuilder.DropTable(
                 name: "Department");
