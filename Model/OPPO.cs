@@ -12,6 +12,7 @@ namespace PriceQuationApi.Model
         [Display(Name ="Oppo編號")]
         public string OppoId { get; set; }
 
+        [Required]
         [Display(Name = "狀態")]
         //1.Bom表匯入 , 2.量檢具需求填寫 3.夾治具需求填寫 , 
         //4.各單位報價  , 5.報價完成 , 6.作廢 , 7.獲得合約

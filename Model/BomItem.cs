@@ -8,12 +8,15 @@ namespace PriceQuationApi.Model
         [Display(Name = "編號")]
         public string BomItemId { get; set; }
 
+        [Required]
         [Display(Name = "總成編號")]
         public string AssemblyPartNumber { get; set; }
 
+        [Required]
         [Display(Name = "構成關係")]
         public int PartLevel { get; set; }
 
+        [Required]
         [Display(Name = "件號")]
         public string PartNumber { get; set; }
 
@@ -53,15 +56,18 @@ namespace PriceQuationApi.Model
         [Display(Name = "途程規範(4)")]
         public string RoutingRule4 { get; set; }
 
+        [Required]
         [Display(Name = "新件/延用件")]
         public string NeworOld { get; set; }
 
         [Display(Name = "延用車型")] //有延用才需要填寫
         public string OldCarType { get; set; }
 
+        [Required]
         [Display(Name = "來源")]
         public string Source { get; set; }
 
+        [Required]
         [Display(Name = "數量")]
         public decimal Quantity { get; set; }
 
@@ -75,6 +81,5 @@ namespace PriceQuationApi.Model
         public string Remark { get; set; }
 
         public Bom Bom { get; set; }
-
     }
 }

@@ -12,9 +12,11 @@ namespace PriceQuationApi.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int QuoteDetailId {get; set;}
 
+        [Required]
         [Display(Name = "總成件號")]
         public string AssemblyPartNumber {get; set;}
 
+        [Required]
         [Display(Name = "報價細項Id")]
         public int QuoteItemId { get; set; }
 
