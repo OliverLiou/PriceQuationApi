@@ -12,8 +12,9 @@ namespace PriceQuationApi.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BomId { get; set; }
 
-        [Display(Name = "OPPO編號")]
-        public string OPPOId { get; set; }
+        [Required]
+        [Display(Name = "Oppo編號")]
+        public string OppoId { get; set; }
 
         [Key]
         [Display(Name = "總成件號")]

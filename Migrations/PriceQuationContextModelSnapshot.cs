@@ -53,7 +53,8 @@ namespace PriceQuationApi.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("Date");
 
-                    b.Property<string>("OPPOId")
+                    b.Property<string>("OppoId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("UserId")
@@ -61,7 +62,7 @@ namespace PriceQuationApi.Migrations
 
                     b.HasKey("AssemblyPartNumber");
 
-                    b.HasIndex("OPPOId");
+                    b.HasIndex("OppoId");
 
                     b.ToTable("Bom");
                 });
@@ -72,6 +73,7 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AssemblyPartNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Category")
@@ -84,6 +86,7 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NeworOld")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OldCarType")
@@ -99,6 +102,7 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PartNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Quantity")
@@ -132,6 +136,7 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ThicknessWire")
@@ -152,9 +157,11 @@ namespace PriceQuationApi.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DepartmentId");
@@ -236,9 +243,10 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AssemblyPartNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("DepartemntId")
+                    b.Property<int?>("DepartemntId")
                         .HasColumnType("int");
 
                     b.Property<string>("EngineeringName")
@@ -250,43 +258,44 @@ namespace PriceQuationApi.Migrations
                     b.Property<string>("EquipmentName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("EquipmentQuantity")
+                    b.Property<decimal?>("EquipmentQuantity")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("EquipmentRemark")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("EquipmentTotal")
+                    b.Property<decimal?>("EquipmentTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("EquipmentUnitPrice")
+                    b.Property<decimal?>("EquipmentUnitPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("FixtureName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("FixtureQuantity")
+                    b.Property<decimal?>("FixtureQuantity")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("FixtureRemark")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("FixtureTotal")
+                    b.Property<decimal?>("FixtureTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("FixtureUnitPrice")
+                    b.Property<decimal?>("FixtureUnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("NeedEquipment")
+                    b.Property<bool?>("NeedEquipment")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("NeedFixture")
+                    b.Property<bool?>("NeedFixture")
                         .HasColumnType("bit");
 
                     b.Property<string>("PartNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Share")
+                    b.Property<bool?>("Share")
                         .HasColumnType("bit");
 
                     b.HasKey("FixtureItemId");
@@ -314,23 +323,23 @@ namespace PriceQuationApi.Migrations
                     b.Property<string>("MeasuringRemark")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("MeasuringTotal")
+                    b.Property<decimal?>("MeasuringTotal")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MeasuringTotalRemark")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("MeasuringUnitFee")
+                    b.Property<decimal?>("MeasuringUnitFee")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("NeedMeausring")
+                    b.Property<bool?>("NeedMeausring")
                         .HasColumnType("bit");
 
                     b.Property<string>("PartNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<decimal?>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("MeasuringItemId");
@@ -361,6 +370,7 @@ namespace PriceQuationApi.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("AssemblyPartNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("FinishedTime")
@@ -395,6 +405,7 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ResponsibleItem")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("QuoteItemId");
@@ -480,6 +491,7 @@ namespace PriceQuationApi.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("Account")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -493,6 +505,7 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PassWord")
+                        .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
@@ -507,8 +520,9 @@ namespace PriceQuationApi.Migrations
                 {
                     b.HasOne("PriceQuationApi.Model.Oppo", "Oppo")
                         .WithMany("Boms")
-                        .HasForeignKey("OPPOId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OppoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Oppo");
                 });
@@ -518,7 +532,8 @@ namespace PriceQuationApi.Migrations
                     b.HasOne("PriceQuationApi.Model.Bom", "Bom")
                         .WithMany("BomItems")
                         .HasForeignKey("AssemblyPartNumber")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Bom");
                 });
@@ -528,7 +543,8 @@ namespace PriceQuationApi.Migrations
                     b.HasOne("PriceQuationApi.Model.Bom", "Bom")
                         .WithMany("FixtureItems")
                         .HasForeignKey("AssemblyPartNumber")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Bom");
                 });
@@ -549,7 +565,8 @@ namespace PriceQuationApi.Migrations
                     b.HasOne("PriceQuationApi.Model.Bom", "Bom")
                         .WithMany("QuoteDetails")
                         .HasForeignKey("AssemblyPartNumber")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PriceQuationApi.Model.User", null)
                         .WithMany("QuoteDetails")

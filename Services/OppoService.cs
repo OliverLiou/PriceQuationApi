@@ -13,9 +13,8 @@ namespace PriceQuationApi.Services
     public interface IOppoService
     {
         Task<Oppo> CreateOppo(Oppo oppo);
-        Task<PlmMiddle> GetMiddleData(string oppoId, string assembylyPartNumber);
+        Task<PlmMiddle> GetMiddleData(string oppoId, string assemblyPartNumber);
         Task<int> GetQuoteItem(string quoteItemId);
-
         Task<List<Oppo>> GetOppos();
         Task<Oppo> GetOppo(string oppoId);
     }
@@ -27,8 +26,22 @@ namespace PriceQuationApi.Services
         {
             _context = context;
         }
+        
+        public async Task<Oppo> CreateOppo(Oppo oppo)
+        {
+            try
+            {
+                _context.Oppo.Add(oppo);
+                await _context.SaveChangesAsync();
+                return oppo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        public async Task<PlmMiddle> GetMiddleData(string OPPOId, string assemblyPartNumber)
+        public async Task<PlmMiddle> GetMiddleData(string oppoId, string assemblyPartNumber)
         {
             PlmMiddle plmMiddle = new PlmMiddle();
             try
@@ -39,7 +52,7 @@ namespace PriceQuationApi.Services
                                                         "(CONNECT_DATA= (SERVER=dedicated)(SERVICE_NAME=HCMFDEV)));" +
                                                         "User Id = INTERFACE; Password = RFtgYHuj;";
                     oracleConnection.Open();
-                    string sql = string.Format("Select * from PLM_QPP where OPPO='{0}' And HC_Product='{1}'", OPPOId, assemblyPartNumber);
+                    string sql = string.Format("Select * from PLM_QPP where OPPO='{0}' And HC_Product='{1}'", oppoId, assemblyPartNumber);
                     OracleCommand oracleCommand = new OracleCommand(sql, oracleConnection);
                     OracleDataReader reader = oracleCommand.ExecuteReader();
                     if (!reader.HasRows)
@@ -72,26 +85,14 @@ namespace PriceQuationApi.Services
             }
         }
 
-        public async Task<Oppo> CreateOppo(Oppo oppo)
-        {
-            try
-            {
-                _context.Oppo.Add(oppo);
-                await _context.SaveChangesAsync();
-                return oppo;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public async Task<int> GetQuoteItem(string quoteItemId)
         {
             try
             {
                 int Id = Convert.ToInt16(quoteItemId);
                 var quoteItem = await _context.QuoteItem.Where(q => q.QuoteItemId == Id).FirstOrDefaultAsync();
+                // var quoteItem = quoteItems.Find(q => q.QuoteItemId == Id);
+
                 if (quoteItem == null)
                     throw new Exception(string.Format("quoteItemId = {0} 不存在，請聯絡PLM管理者！", quoteItemId));
                 return quoteItem.QuoteItemId;

@@ -12,13 +12,19 @@ namespace PriceQuationApi.Services
 {
     public interface IBomService
     {
-        // Task<IEnumerable<Bom>> CreateBoms(List<Bom> Boms);
+
         // Task<int> SetDepartmentId(string category);
         Task<User> GetUser(int userId);
         Task<IEnumerable<Bom>> GetBomsAsync();
         Task<Bom> GetBomDetailsAsync(string assemblyPartNumber);
+        Task<Bom> CreateBom(Bom bom);
         Task<List<string>> GetPlmAssemblyPNs(string oppoId);
+        Task<Bom> GetBom(string assemblyPartNumber);
+        Task<BomItem> GetBomItem(string bomItemId);
+        Task<MeasuringItem> GetMeasuringItem(string bomItemId);
+        Task<FixtureItem> GetFixtureItem(string bomItemId);
 
+        Task<BomItem> UpdateBomItem(string bomItemId, BomItem bomItem, MeasuringItem measuringItem, FixtureItem fixtureItem);
     }
 
     public class BomService : IBomService
@@ -29,7 +35,7 @@ namespace PriceQuationApi.Services
         {
             _context = context;
         }
-        
+
         public async Task<User> GetUser(int userId)
         {
             try
@@ -42,7 +48,7 @@ namespace PriceQuationApi.Services
                 throw ex;
             }
         }
-        
+
         public async Task<IEnumerable<Bom>> GetBomsAsync()
         {
             try
@@ -108,22 +114,92 @@ namespace PriceQuationApi.Services
             }
         }
 
-        // public async Task<IEnumerable<Bom>> CreateBoms(List<Bom> Boms)
-        // {
-        //     try
-        //     {
-        //         foreach (var bom in Boms)
-        //         {
-        //             _context.Bom.Add(bom);
-        //         }
-        //         await _context.SaveChangesAsync();
-        //         return Boms;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         throw ex;
-        //     }
-        // }
+        public async Task<Bom> CreateBom(Bom bom)
+        {
+            try
+            {
+                _context.Bom.Add(bom);
+                await _context.SaveChangesAsync();
+                return bom;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Bom> GetBom(string assemblyPartNumber)
+        {
+            try
+            {
+                var bom = await _context.Bom.FindAsync(assemblyPartNumber);
+                return bom;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<BomItem> GetBomItem(string bomItemId)
+        {
+            try
+            {
+                var item = await _context.BomItem.FindAsync(bomItemId);
+                return item;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<MeasuringItem> GetMeasuringItem(string bomItemId)
+        {
+            try
+            {
+                var item = await _context.MeasuringItem.FindAsync(bomItemId);
+                return item;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<FixtureItem> GetFixtureItem(string bomItemId)
+        {
+            try
+            {
+                var item = await _context.FixtureItem.FindAsync(bomItemId);
+                return item;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<BomItem> UpdateBomItem(string bomItemId, BomItem bomItem, MeasuringItem measuringItem, FixtureItem fixtureItem)
+        {
+            try
+            {
+                var bItem = await _context.BomItem.FindAsync(bomItemId);
+                var mItem = await _context.MeasuringItem.FindAsync(bomItemId);
+                var fItem = await _context.FixtureItem.FindAsync(bomItemId);
+
+                _context.Entry(bItem).CurrentValues.SetValues(bomItem);
+                _context.Entry(mItem).CurrentValues.SetValues(measuringItem);
+                _context.Entry(fItem).CurrentValues.SetValues(fixtureItem);
+                await _context.SaveChangesAsync();
+                return bomItem;
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+        }
 
         // public async Task<int> SetDepartmentId(string category)
         // {
