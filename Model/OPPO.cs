@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PriceQuationApi.Model
 {
-    //Data From PLM
+    //Data From PLM TESTTTTTT
     public class Oppo
     {
         [Key]
