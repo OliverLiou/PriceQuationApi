@@ -126,7 +126,7 @@ namespace PriceQuationApi.Controllers
                 MeasuringItem mItem = await _bomService.GetMeasuringItem(bomItemId);
                 FixtureItem fItme = await _bomService.GetFixtureItem(bomItemId);
                 if (bomItem == null | mItem == null | fItme == null)
-                    NotFound();
+                    return NotFound();
                 
                 mItem.PartNumber = bomItem.PartNumber;
                 fItme.PartNumber = bomItem.PartNumber;
@@ -135,10 +135,10 @@ namespace PriceQuationApi.Controllers
 
                 return NoContent();
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                ModelState.AddModelError("Error", ex.Message);
+                return BadRequest(ModelState);
             }
         }
 
