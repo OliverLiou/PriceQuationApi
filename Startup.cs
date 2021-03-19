@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PriceQuationApi.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace PriceQuationApi
 {
@@ -108,6 +111,10 @@ namespace PriceQuationApi
             services.AddScoped<IBomService, BomService>();
             services.AddScoped<IOppoService, OppoService>();
             services.AddCors();
+
+            services.AddIdentity<User, IdentityRole>()
+                    .AddEntityFrameworkStores<PriceQuationContext>()
+                    .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
