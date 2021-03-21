@@ -21,6 +21,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using AutoMapper;
 
 namespace PriceQuationApi
 {
@@ -36,10 +37,19 @@ namespace PriceQuationApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddControllersWithViews()
-                    .AddNewtonsoftJson(options =>
-                                       options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            // Identity
+            services.AddIdentity<AdminUser,AdminRole>().AddEntityFrameworkStores<PriceQuationContext>();
+
+            services.AddControllers().
+            AddNewtonsoftJson( options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+            
 
             services.AddDbContext<PriceQuationContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("PriceQuationContext")));
@@ -107,14 +117,14 @@ namespace PriceQuationApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("JwtSettings:SignKey")))
                 };
             });
+            
+            // 加入AutoMapper
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IBomService, BomService>();
             services.AddScoped<IOppoService, OppoService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddCors();
-
-            services.AddIdentity<User, IdentityRole>()
-                    .AddEntityFrameworkStores<PriceQuationContext>()
-                    .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,9 +12,7 @@ namespace PriceQuationApi.Services
 {
     public interface IBomService
     {
-
         // Task<int> SetDepartmentId(string category);
-        Task<User> GetUser(int userId);
         Task<IEnumerable<Bom>> GetBomsAsync();
         Task<Bom> GetBomDetailsAsync(string assemblyPartNumber);
         Task<Bom> CreateBom(Bom bom);
@@ -34,19 +32,6 @@ namespace PriceQuationApi.Services
         public BomService(PriceQuationContext context)
         {
             _context = context;
-        }
-
-        public async Task<User> GetUser(int userId)
-        {
-            try
-            {
-                var user = await _context.User.FindAsync(userId);
-                return user;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         public async Task<IEnumerable<Bom>> GetBomsAsync()

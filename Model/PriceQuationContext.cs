@@ -1,19 +1,25 @@
+using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace PriceQuationApi.Model
 {
-    public class PriceQuationContext : DbContext
+    public class PriceQuationContext : IdentityDbContext<AdminUser, AdminRole, string>
     {
-        public PriceQuationContext(DbContextOptions<PriceQuationContext> options)
+        private IPasswordHasher<AdminUser> _passwordHasher;
+
+        public PriceQuationContext(DbContextOptions<PriceQuationContext> options, IPasswordHasher<AdminUser> passwordHasher)
         : base(options)
         {
-
+            _passwordHasher = passwordHasher;
         }
+
         public DbSet<Oppo> Oppo { get; set; }
         public DbSet<Bom> Bom { get; set; }
         public DbSet<QuoteDetail> QuoteDetail { get; set; }
         public DbSet<Department> Department { get; set; }
-        public DbSet<User> User { get; set; }
+        public DbSet<AdminUser> AdminUser { get; set; }
 
         public DbSet<BomItem> BomItem { get; set; }
         public DbSet<MeasuringItem> MeasuringItem { get; set; }
@@ -22,8 +28,18 @@ namespace PriceQuationApi.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Identity
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<AdminUser>().ToTable("AdminUser");
+            modelBuilder.Entity<AdminRole>().ToTable("AdminRole");
+            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaim");
+            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserToken");
+            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin");
+            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
+            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRole");
+
             modelBuilder.Entity<Oppo>()
-                .HasKey( o => o.OppoId);
+                .HasKey(o => o.OppoId);
 
             modelBuilder.Entity<Bom>()
                 .HasKey(b => b.BomId);
@@ -49,8 +65,8 @@ namespace PriceQuationApi.Model
             modelBuilder.Entity<Department>()
                .HasKey(d => d.DepartmentId);
 
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.UserId);
+            // modelBuilder.Entity<AdminUser>()
+            //     .HasKey(u => u.UserId);
 
             modelBuilder.Entity<Bom>()
                 .HasOne(b => b.Oppo)
@@ -81,7 +97,7 @@ namespace PriceQuationApi.Model
                 .HasForeignKey(q => q.AssemblyPartNumber)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<AdminUser>()
                 .HasOne(u => u.Department)
                 .WithMany(q => q.Users)
                 .HasForeignKey(q => q.DepartmentId);
@@ -94,33 +110,60 @@ namespace PriceQuationApi.Model
             modelBuilder.Entity<Department>()
              .HasData
              (
-                 new Department() { DepartmentId = 1, Code = "HQ3200", Name = "營業" },
-                 new Department() { DepartmentId = 2, Code = "HQ2110", Name = "採購" },
-                 new Department() { DepartmentId = 3, Code = "HQ8100", Name = "工機-模具" },
-                 new Department() { DepartmentId = 4, Code = "HQ8200", Name = "工機-設備" },
-                 new Department() { DepartmentId = 5, Code = "HQ8140", Name = "工機-量檢具" },
-                 new Department() { DepartmentId = 6, Code = "HQ8130", Name = "工機-夾治具" },
-                 new Department() { DepartmentId = 7, Code = "HQ4100", Name = "試驗課" },
-                 new Department() { DepartmentId = 8, Code = "HQ5100", Name = "生管" },
-                 new Department() { DepartmentId = 9, Code = "HQ4000", Name = "設計" },
-                 new Department() { DepartmentId = 10, Code = "HQ3330", Name = "成本課" },
-                 new Department() { DepartmentId = 11, Code = "HQ4910", Name = "ME" }
+                 new Department() { DepartmentId = "營業" , Code = "HQ3200" },
+                 new Department() { DepartmentId = "採購", Code = "HQ2110" },
+                 new Department() { DepartmentId = "工機-模具", Code = "HQ8100" },
+                 new Department() { DepartmentId = "工機-設備", Code = "HQ8200" },
+                 new Department() { DepartmentId = "工機-量檢具", Code = "HQ8140" },
+                 new Department() { DepartmentId = "工機-夾治具", Code = "HQ8130" },
+                 new Department() { DepartmentId = "試驗課", Code = "HQ4100" },
+                 new Department() { DepartmentId = "生管", Code = "HQ5100" },
+                 new Department() { DepartmentId = "設計", Code = "HQ4000" },
+                 new Department() { DepartmentId = "成本課", Code = "HQ3330" },
+                 new Department() { DepartmentId = "ME", Code = "HQ4910" }
              );
 
             modelBuilder.Entity<QuoteItem>()
             .HasData
             (
-                new QuoteItem() { QuoteItemId = 1, ResponsibleItem = "自製件", DepartemntId = 3 },
-                new QuoteItem() { QuoteItemId = 2, ResponsibleItem = "外包件", DepartemntId = 2 },
-                new QuoteItem() { QuoteItemId = 3, ResponsibleItem = "延用件", DepartemntId = 10 },
-                new QuoteItem() { QuoteItemId = 4, ResponsibleItem = "進口件", DepartemntId = 1 },
-                new QuoteItem() { QuoteItemId = 5, ResponsibleItem = "量檢具費", DepartemntId = 5 },
-                new QuoteItem() { QuoteItemId = 6, ResponsibleItem = "夾治具費", DepartemntId = 6 },
-                new QuoteItem() { QuoteItemId = 7, ResponsibleItem = "設備費", DepartemntId = 4 },
-                new QuoteItem() { QuoteItemId = 8, ResponsibleItem = "總成組立費", DepartemntId = 1 },
-                new QuoteItem() { QuoteItemId = 9, ResponsibleItem = "包裝&運輸費", DepartemntId = 8 },
-                new QuoteItem() { QuoteItemId = 10, ResponsibleItem = "打樣費", DepartemntId = 2 },
-                new QuoteItem() { QuoteItemId = 11, ResponsibleItem = "試驗費", DepartemntId = 7 }
+                new QuoteItem() { QuoteItemId = 1, ResponsibleItem = "自製件", DepartemntId = "工機-模具" },
+                new QuoteItem() { QuoteItemId = 2, ResponsibleItem = "外包件", DepartemntId = "採購" },
+                new QuoteItem() { QuoteItemId = 3, ResponsibleItem = "延用件", DepartemntId = "成本課" },
+                new QuoteItem() { QuoteItemId = 4, ResponsibleItem = "進口件", DepartemntId = "營業" },
+                new QuoteItem() { QuoteItemId = 5, ResponsibleItem = "量檢具費", DepartemntId = "工機-量檢具" },
+                new QuoteItem() { QuoteItemId = 6, ResponsibleItem = "夾治具費", DepartemntId = "工機-夾治具" },
+                new QuoteItem() { QuoteItemId = 7, ResponsibleItem = "設備費", DepartemntId = "工機-設備" },
+                new QuoteItem() { QuoteItemId = 8, ResponsibleItem = "總成組立費", DepartemntId = "營業" },
+                new QuoteItem() { QuoteItemId = 9, ResponsibleItem = "包裝&運輸費", DepartemntId = "生管" },
+                new QuoteItem() { QuoteItemId = 10, ResponsibleItem = "打樣費", DepartemntId = "採購" },
+                new QuoteItem() { QuoteItemId = 11, ResponsibleItem = "試驗費", DepartemntId = "試驗課" }
+            );
+
+            // DataSeeding (Authorization)
+            string superAdminName = "SuperAdmin";
+            string superAdminRoleDesc = "超級管理員";
+            var superAdminRole = new AdminRole() { Id = superAdminName, Name = superAdminName, NormalizedName = superAdminName.ToUpper(), RoleDesc = superAdminRoleDesc };
+            superAdminRole.ConcurrencyStamp = "ConcurrencyStamp"; //為了防止再移轉
+            modelBuilder.Entity<AdminRole>().HasData(superAdminRole);
+
+            string adminName = "Admin";
+            string adminRoleDesc = "系統管理員";
+            var adminRole = new AdminRole() { Id = adminName, Name = adminName, NormalizedName = adminName.ToUpper(), RoleDesc = adminRoleDesc };
+            adminRole.ConcurrencyStamp = "ConcurrencyStamp"; //為了防止再移轉
+            modelBuilder.Entity<AdminRole>().HasData(adminRole);
+
+            // DataSeeding (Identity)
+            string userName = "sadmin";
+            string email = "sadmin@hcmfgroup.com";
+            string password = "sadmin";
+            var user = new AdminUser() { Id = userName, DepartmentId = "營業", UserName = userName, NormalizedUserName = userName.ToUpper(), Email = email, NormalizedEmail = email.ToUpper(), SecurityStamp = Guid.NewGuid().ToString() };
+            // user.PasswordHash = _passwordHasher.HashPassword(user, password);
+            user.PasswordHash = "AQAAAAEAACcQAAAAEOtRfNDmY3fKqd9iqJINpOVUiLz8JFKzKEz/Xt46A/eIfMdpdMjueu4xYIYFRncnXg=="; //為了防止再移轉
+            user.SecurityStamp = "SecurityStamp"; //為了防止再移轉
+            user.ConcurrencyStamp = "ConcurrencyStamp"; //為了防止再移轉
+            modelBuilder.Entity<AdminUser>().HasData(user);
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>() { UserId = user.Id, RoleId = superAdminRole.Id }
             );
         }
     }

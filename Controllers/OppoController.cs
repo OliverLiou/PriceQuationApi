@@ -10,12 +10,13 @@ using PriceQuationApi.Services;
 using NPOI.XSSF.UserModel; //XSSF 用來產生Excel 2007檔案（.xlsx）
 using NPOI.SS.UserModel;
 using NPOI.HSSF.UserModel;
-// using PriceQuationApi.Plm;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PriceQuationApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // [Authorize]
     public class OppoController :ControllerBase
     {
         private IOppoService _service;
@@ -26,6 +27,7 @@ namespace PriceQuationApi.Controllers
         }
 
         [HttpPost("CreateOppo/{oppoId}")]
+        // [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<IActionResult> CreateOppo(string oppoId, [FromForm(Name = "file")] IFormFileCollection excelfiles)
         {
             try

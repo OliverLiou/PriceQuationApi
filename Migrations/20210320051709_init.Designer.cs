@@ -10,8 +10,8 @@ using PriceQuationApi.Model;
 namespace PriceQuationApi.Migrations
 {
     [DbContext(typeof(PriceQuationContext))]
-    [Migration("20210319040305_20210319-Oliver-1")]
-    partial class _20210319Oliver1
+    [Migration("20210320051709_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,263 @@ namespace PriceQuationApi.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaim");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaim");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogin");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "sadmin",
+                            RoleId = "SuperAdmin"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UserToken");
+                });
+
+            modelBuilder.Entity("PriceQuationApi.Model.AdminRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("RoleDesc")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AdminRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "SuperAdmin",
+                            ConcurrencyStamp = "ConcurrencyStamp",
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN",
+                            RoleDesc = "超級管理員"
+                        },
+                        new
+                        {
+                            Id = "Admin",
+                            ConcurrencyStamp = "ConcurrencyStamp",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN",
+                            RoleDesc = "系統管理員"
+                        });
+                });
+
+            modelBuilder.Entity("PriceQuationApi.Model.AdminUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DepartmentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("EmployeeId")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("EmployeeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AdminUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "sadmin",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ConcurrencyStamp",
+                            DepartmentId = "營業",
+                            Email = "sadmin@hcmfgroup.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SADMIN@HCMFGROUP.COM",
+                            NormalizedUserName = "SADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOtRfNDmY3fKqd9iqJINpOVUiLz8JFKzKEz/Xt46A/eIfMdpdMjueu4xYIYFRncnXg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "SecurityStamp",
+                            TwoFactorEnabled = false,
+                            UserName = "sadmin"
+                        });
+                });
 
             modelBuilder.Entity("PriceQuationApi.Model.Bom", b =>
                 {
@@ -153,16 +410,10 @@ namespace PriceQuationApi.Migrations
 
             modelBuilder.Entity("PriceQuationApi.Model.Department", b =>
                 {
-                    b.Property<int>("DepartmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                    b.Property<string>("DepartmentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -173,69 +424,58 @@ namespace PriceQuationApi.Migrations
                     b.HasData(
                         new
                         {
-                            DepartmentId = 1,
-                            Code = "HQ3200",
-                            Name = "營業"
+                            DepartmentId = "營業",
+                            Code = "HQ3200"
                         },
                         new
                         {
-                            DepartmentId = 2,
-                            Code = "HQ2110",
-                            Name = "採購"
+                            DepartmentId = "採購",
+                            Code = "HQ2110"
                         },
                         new
                         {
-                            DepartmentId = 3,
-                            Code = "HQ8100",
-                            Name = "工機-模具"
+                            DepartmentId = "工機-模具",
+                            Code = "HQ8100"
                         },
                         new
                         {
-                            DepartmentId = 4,
-                            Code = "HQ8200",
-                            Name = "工機-設備"
+                            DepartmentId = "工機-設備",
+                            Code = "HQ8200"
                         },
                         new
                         {
-                            DepartmentId = 5,
-                            Code = "HQ8140",
-                            Name = "工機-量檢具"
+                            DepartmentId = "工機-量檢具",
+                            Code = "HQ8140"
                         },
                         new
                         {
-                            DepartmentId = 6,
-                            Code = "HQ8130",
-                            Name = "工機-夾治具"
+                            DepartmentId = "工機-夾治具",
+                            Code = "HQ8130"
                         },
                         new
                         {
-                            DepartmentId = 7,
-                            Code = "HQ4100",
-                            Name = "試驗課"
+                            DepartmentId = "試驗課",
+                            Code = "HQ4100"
                         },
                         new
                         {
-                            DepartmentId = 8,
-                            Code = "HQ5100",
-                            Name = "生管"
+                            DepartmentId = "生管",
+                            Code = "HQ5100"
                         },
                         new
                         {
-                            DepartmentId = 9,
-                            Code = "HQ4000",
-                            Name = "設計"
+                            DepartmentId = "設計",
+                            Code = "HQ4000"
                         },
                         new
                         {
-                            DepartmentId = 10,
-                            Code = "HQ3330",
-                            Name = "成本課"
+                            DepartmentId = "成本課",
+                            Code = "HQ3330"
                         },
                         new
                         {
-                            DepartmentId = 11,
-                            Code = "HQ4910",
-                            Name = "ME"
+                            DepartmentId = "ME",
+                            Code = "HQ4910"
                         });
                 });
 
@@ -391,8 +631,6 @@ namespace PriceQuationApi.Migrations
 
                     b.HasIndex("AssemblyPartNumber");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("QuoteDetail");
                 });
 
@@ -403,8 +641,9 @@ namespace PriceQuationApi.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("DepartemntId")
-                        .HasColumnType("int");
+                    b.Property<string>("DepartemntId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ResponsibleItem")
                         .IsRequired()
@@ -420,147 +659,129 @@ namespace PriceQuationApi.Migrations
                         new
                         {
                             QuoteItemId = 1,
-                            DepartemntId = 3,
+                            DepartemntId = "工機-模具",
                             ResponsibleItem = "自製件"
                         },
                         new
                         {
                             QuoteItemId = 2,
-                            DepartemntId = 2,
+                            DepartemntId = "採購",
                             ResponsibleItem = "外包件"
                         },
                         new
                         {
                             QuoteItemId = 3,
-                            DepartemntId = 10,
+                            DepartemntId = "成本課",
                             ResponsibleItem = "延用件"
                         },
                         new
                         {
                             QuoteItemId = 4,
-                            DepartemntId = 1,
+                            DepartemntId = "營業",
                             ResponsibleItem = "進口件"
                         },
                         new
                         {
                             QuoteItemId = 5,
-                            DepartemntId = 5,
+                            DepartemntId = "工機-量檢具",
                             ResponsibleItem = "量檢具費"
                         },
                         new
                         {
                             QuoteItemId = 6,
-                            DepartemntId = 6,
+                            DepartemntId = "工機-夾治具",
                             ResponsibleItem = "夾治具費"
                         },
                         new
                         {
                             QuoteItemId = 7,
-                            DepartemntId = 4,
+                            DepartemntId = "工機-設備",
                             ResponsibleItem = "設備費"
                         },
                         new
                         {
                             QuoteItemId = 8,
-                            DepartemntId = 1,
+                            DepartemntId = "營業",
                             ResponsibleItem = "總成組立費"
                         },
                         new
                         {
                             QuoteItemId = 9,
-                            DepartemntId = 8,
+                            DepartemntId = "生管",
                             ResponsibleItem = "包裝&運輸費"
                         },
                         new
                         {
                             QuoteItemId = 10,
-                            DepartemntId = 2,
+                            DepartemntId = "採購",
                             ResponsibleItem = "打樣費"
                         },
                         new
                         {
                             QuoteItemId = 11,
-                            DepartemntId = 7,
+                            DepartemntId = "試驗課",
                             ResponsibleItem = "試驗費"
                         });
                 });
 
-            modelBuilder.Entity("PriceQuationApi.Model.User", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                    b.HasOne("PriceQuationApi.Model.AdminRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("PriceQuationApi.Model.AdminUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<string>("Account")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("PriceQuationApi.Model.AdminUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<bool>("Alive")
-                        .HasColumnType("bit");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("PriceQuationApi.Model.AdminRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasOne("PriceQuationApi.Model.AdminUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("PriceQuationApi.Model.AdminUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity("PriceQuationApi.Model.AdminUser", b =>
+                {
+                    b.HasOne("PriceQuationApi.Model.Department", "Department")
+                        .WithMany("Users")
+                        .HasForeignKey("DepartmentId");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PassWord")
-                        .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("User");
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("PriceQuationApi.Model.Bom", b =>
@@ -615,10 +836,6 @@ namespace PriceQuationApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PriceQuationApi.Model.User", null)
-                        .WithMany("QuoteDetails")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Bom");
                 });
 
@@ -627,17 +844,6 @@ namespace PriceQuationApi.Migrations
                     b.HasOne("PriceQuationApi.Model.Department", "Department")
                         .WithMany("QuoteItems")
                         .HasForeignKey("DepartemntId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("PriceQuationApi.Model.User", b =>
-                {
-                    b.HasOne("PriceQuationApi.Model.Department", "Department")
-                        .WithMany("Users")
-                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -665,11 +871,6 @@ namespace PriceQuationApi.Migrations
             modelBuilder.Entity("PriceQuationApi.Model.Oppo", b =>
                 {
                     b.Navigation("Boms");
-                });
-
-            modelBuilder.Entity("PriceQuationApi.Model.User", b =>
-                {
-                    b.Navigation("QuoteDetails");
                 });
 #pragma warning restore 612, 618
         }

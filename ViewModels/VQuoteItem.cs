@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PriceQuationApi.Model
+namespace PriceQuationApi.ViewModels
 {
-    public class QuoteItem
+    public class VQuoteItem
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,8 +16,8 @@ namespace PriceQuationApi.Model
 
         [Required]
         [Display(Name="負責單位")]
-        public string DepartemntId {get; set;}
+        public int DepartemntId {get; set;}
 
-        public Department Department { get; set;}
+        public VDepartment VDepartment { get; set;}
     }
 }
